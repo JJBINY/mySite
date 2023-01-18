@@ -1,0 +1,10 @@
+spring:
+  datasource:
+    url: jdbc:h2:tcp://localhost/~/mySite
+    username: sa
+    password:
+  jpa:
+    hibernate:
+      ddl-auto: create
+      format_sql: true
+    database: h2
