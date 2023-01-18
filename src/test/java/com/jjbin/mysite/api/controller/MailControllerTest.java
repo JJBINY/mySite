@@ -2,13 +2,10 @@ package com.jjbin.mysite.api.controller;
 
 import com.jjbin.mysite.api.domain.Mail;
 import com.jjbin.mysite.api.repository.MailRepository;
-import com.jjbin.mysite.api.service.MailService;
-import lombok.RequiredArgsConstructor;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
-import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.http.MediaType;
 import org.springframework.test.web.servlet.MockMvc;
@@ -16,7 +13,8 @@ import org.springframework.test.web.servlet.MockMvc;
 import static org.springframework.restdocs.mockmvc.RestDocumentationRequestBuilders.get;
 import static org.springframework.restdocs.mockmvc.RestDocumentationRequestBuilders.post;
 import static org.springframework.test.web.servlet.result.MockMvcResultHandlers.print;
-import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;
+import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
+import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
 @SpringBootTest
 //@WebMvcTest
@@ -73,5 +71,22 @@ class MailControllerTest {
                 .andExpect(jsonPath("$.content").value("내용"))
                 .andDo(print());
     }
+
+//    @Test
+//    @DisplayName("id로 메일 삭제")
+//    void deleteOne() throws Exception {
+//        Mail mail = Mail.builder()
+//                .title("제목")
+//                .content("내용")
+//                .build();
+//        Mail save = mailRepository.save(mail);
+//        Long id = save.getId();
+//        mockMvc.perform(post("/mail/delete/"+id));
+//
+//
+//
+//        Assertions.assertThatThrownBy(()->mockMvc.perform(get("/mail/"+id)))
+//                .isInstanceOf(IllegalArgumentException.class);
+//    }
 
 }
