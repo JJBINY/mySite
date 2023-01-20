@@ -26,6 +26,6 @@ public class MailDto {
         this.id = mail.getId();
         this.title = mail.getTitle();
         this.content = mail.getContent();
-        this.date = mail.getDate();
+        this.date = mail.getCreatedDate();
     }
 }

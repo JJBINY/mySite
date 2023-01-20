@@ -44,14 +44,13 @@ public class MailController {
             return CreateMailResponse.builder()
                             .title(fieldError.getDefaultMessage())
                                     .build();
-
         }
         Mail mail = Mail.builder()
                 .title(request.getTitle())
                 .content(request.getContent())
                 .build();
 
-        Long id = mailService.saveMail(mail);
+        Long id = mailService.save(mail);
         return CreateMailResponse.builder()
                 .id(id)
                 .title(mail.getTitle())
@@ -60,7 +59,7 @@ public class MailController {
 
     @GetMapping("/mail/list")
     public List<MailDto> mails() {
-        List<Mail> mails = mailService.findMails();
+        List<Mail> mails = mailService.findAll();
         return mails.stream()
                 .map(MailDto::new)
                 .collect(Collectors.toList());
@@ -69,7 +68,12 @@ public class MailController {
 
     @GetMapping("/mail/{mailId}")
     public MailDto findMail(@PathVariable Long mailId){
-        Mail mail = mailService.findOne(mailId).orElseThrow();
+        Mail mail = mailService.findOne(mailId).orElseThrow(IllegalArgumentException::new);
         return new MailDto(mail);
+    }
+
+    @PostMapping("/mail/delete/{mailId}")
+    public void deleteMail(@PathVariable Long mailId){
+        mailService.delete(mailId);
     }
 }
