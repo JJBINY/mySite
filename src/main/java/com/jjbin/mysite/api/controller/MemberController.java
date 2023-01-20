@@ -6,6 +6,7 @@ import com.jjbin.mysite.api.request.MemberRequest;
 import com.jjbin.mysite.api.response.MemberResponse;
 import com.jjbin.mysite.api.service.MemberService;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.web.bind.annotation.*;
 
 import javax.validation.Valid;
@@ -14,12 +15,15 @@ import java.util.stream.Collectors;
 
 @RestController
 @RequiredArgsConstructor
+@Slf4j
 public class MemberController {
 
     private final MemberService memberService;
 
     @PostMapping("member/join")
     private MemberResponse joinMember(@RequestBody @Valid MemberRequest request){
+        log.info("add = {}",request.getAddress());
+        log.info("req = {}",request);
         Member member = Member.builder()
                 .name(request.getName())
                 .phone(request.getPhone())
