@@ -28,6 +28,7 @@ public class Mail {
 
     private LocalDateTime createdDate;
 
+
     public void setCreatedDate(LocalDateTime createdDate) {
         this.createdDate = createdDate;
     }

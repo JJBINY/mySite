@@ -1,45 +1,65 @@
 <script setup lang="ts">
 
 import axios from "axios";
-import {ref} from "vue";
+import {reactive} from "vue";
 import {useRouter} from "vue-router";
 
 
 const router = useRouter();
-const mails = ref([]);
 
-axios.get("/api/mail/list").then((response) => {
-  response.data.forEach((r: any) => {
-    mails.value.push(r);
-  })
-});
+axios.get("/api/")
+    .then((response) => {
+      if (response.data == "loginHome") {
+        router.push(response.data);
+      }
+    });
 
-const moveToRead = () => {
-  router.push({name: "read"})
-}
+
+const login = function () {
+  // console.log(title,content)
+  // alert("저장완료")
+  axios
+      .post("/api/login", {
+        loginId: form.loginId,
+        password: form.password,
+      })
+      .then((response) => {
+        // console.log(response.status);
+        console.log("postok")
+
+        //TODO 로그인 성공 or 실패 분기별 로직작성
+        router.replace({name: "loginHome"});
+      })
+      .catch((r) => {
+        console.log(r.status)
+      })
+  ;
+
+};
+
+
+const form = reactive({
+  loginId: '',
+  password: '',
+})
 
 </script>
 
 <template>
-  <ul>
-    <li v-for="mail in mails" :key="mail.id">
+  <h2>홈화면입니다.</h2>
+  <el-form :inline="true" :model="form" class="demo-form-inline">
+    <el-form-item label="아이디">
+      <el-input v-model="form.loginId" placeholder="아이디" />
+    </el-form-item>
+    <el-form-item label="비밀번호">
+      <el-input v-model="form.password" placeholder="비밀번호" />
+    </el-form-item>
+    <el-form-item>
+      <el-button type="primary" @click="login()">로그인</el-button>
+    </el-form-item>
+    </el-form>
 
-      <div class="title">
-        <router-link :to="{ name: 'read', params: {mailId: mail.id}}">
-          {{ mail.title }}
-        </router-link>
 
-      </div>
-      <div class="content">
-        {{ mail.content.substring(0,100) }}...
-      </div>
-
-      <div class="sub d-flex">
-        <div class="regDate">2023-01-20{{mail.date}}</div>
-      </div>
-
-    </li>
-  </ul>
 </template>
 
 <style scoped lang="scss">

@@ -17,4 +17,7 @@ public class MemberRequest {
 
     private Address address;
 
+    private String loginId;
+    private String password;
+
 }

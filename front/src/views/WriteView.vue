@@ -3,8 +3,27 @@ import {ref} from "vue";
 import axios from "axios";
 import router from "@/router";
 
+
+const sender = ref("")
+const receiver = ref("")
 const title = ref("")
 const content = ref("")
+const form = ref("[]")
+
+//TODO : 세션 조회해서 sender 자동으로 채우기
+axios.get("/api/member")
+    .then((response) =>{
+      console.log("세션조회")
+      // router.replace({name: "login"})
+      // router.push("login");
+      // // response.data.forEach((r: any) => {
+      // //   form.value.push(r);
+      // // })
+      // console.log(form.value)
+    })
+    .catch((c) => {
+          router.push("login")
+    });
 
 const write = function () {
   // console.log(title,content)
@@ -27,6 +46,13 @@ const cancel = function (){
 </script>
 
 <template>
+
+  <div>
+    <el-input v-model="sender" placeholder="보내는 이"/>
+  </div>
+  <div>
+    <el-input v-model="receiver" placeholder="받는 이"/>
+  </div>
 
   <div>
     <el-input v-model="title" placeholder="제목을 입력해주세요"/>
