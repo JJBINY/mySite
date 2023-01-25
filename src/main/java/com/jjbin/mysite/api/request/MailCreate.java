@@ -1,5 +1,6 @@
 package com.jjbin.mysite.api.request;
 
+import com.jjbin.mysite.api.exception.InvalidRequest;
 import lombok.*;
 import org.springframework.util.Assert;
 
@@ -7,10 +8,10 @@ import javax.persistence.*;
 import javax.validation.constraints.NotBlank;
 
 
-@Getter
+@Getter @Setter
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 @EqualsAndHashCode
-public class CreateMailRequest {
+public class MailCreate {
 
     @NotBlank(message = "제목을 입력해주세요.")
     private String title;
@@ -20,9 +21,15 @@ public class CreateMailRequest {
 
 
     @Builder
-    public CreateMailRequest(String title, String content) {
+    public MailCreate(String title, String content) {
         Assert.hasText(title,"제목은 필수입니다."); //
         this.title = title;
         this.content = content;
+    }
+
+    public void validate() {
+        if(title.length()<4){
+            throw new InvalidRequest("title", "제목은 4자 이상이어야 합니다.");
+        }
     }
 }

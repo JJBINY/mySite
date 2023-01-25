@@ -1,6 +1,8 @@
 <script setup lang="ts">
 import {defineProps, onMounted, ref} from "vue";
 import axios from "axios";
+import router from "@/router";
+
 
 const props = defineProps({
   mailId: {
@@ -16,7 +18,9 @@ const mail = ref({
   content: "",
 });
 
-//api요청방식 개선필요
+
+
+// api요청방식 개선필요
 onMounted(() => {
   axios.get("/api/mail/"+props.mailId).then((response) => {
     // console.log(response)

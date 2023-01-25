@@ -1,41 +1,47 @@
 <script setup lang="ts">
 
 import axios from "axios";
-import {ref} from "vue";
+import {defineProps, ref} from "vue";
 import {useRouter} from "vue-router";
-
+const props = defineProps({
+  memberId: {
+    type: [Number, String],
+    require: true,
+  },
+});
 
 const router = useRouter();
-const members = ref([]);
+const mails = ref([]);
 
-axios.get("/api/members").then((response) => {
+axios.get("/api/member/"+props.memberId+"/mail/list").then((response) => {
   response.data.forEach((r: any) => {
-    members.value.push(r);
+    mails.value.push(r);
   })
 });
 
+const moveToRead = () => {
+  router.push({name: "read"})
+}
 
 </script>
 
 <template>
   <ul>
-    <li v-for="member in members" :key="member.id">
+    <li v-for="mail in mails" :key="mail.id">
 
       <div class="title">
-        <router-link :to="{ name: 'memberMails', params: {memberId: member.id}}">
-          {{ member.name }}
+        <router-link :to="{ name: 'read', params: {mailId: mail.id}}">
+          {{ mail.title }}
         </router-link>
+
       </div>
-      <div class="title">
-          {{ member.phone }}
-      </div>
-      <div class="title">
-        {{ member.address }}
+      <div class="content">
+        {{ mail.content.substring(0,100) }}...
       </div>
 
-<!--      <div class="sub d-flex">-->
-<!--        <div class="regDate">2023-01-20{{member.date}}</div>-->
-<!--      </div>-->
+      <div class="sub d-flex">
+        <div class="regDate">2023-01-20{{mail.date}}</div>
+      </div>
 
     </li>
   </ul>

@@ -3,29 +3,12 @@ import {ref} from "vue";
 import axios from "axios";
 import router from "@/router";
 
-const name = ref("")
-const phone = ref("")
-const address = ref("")
-
-const join = function () {
-  // console.log(title,content)
-  // alert("저장완료")
-  axios
-      .post("/api/mail/join", {
-        name: name.value,
-        phone: phone.value,
-        address: address.value,
-      })
-      .then(() => {
-        router.replace({name: "home"})
-      });
-
-};
-
 import { reactive } from 'vue'
 
 // do not use same name with ref
 const form = reactive({
+  loginId: '',
+  password: '',
   name: '',
   phone1: '',
   phone2: '',
@@ -38,11 +21,13 @@ const form = reactive({
 const onSubmit = () => {
   console.log('submit!')
   console.log(form.name)
-  console.log(form.phone1 + form.phone2 + form.phone3)
-  console.log()
+  console.log(form.loginId)
+  console.log(form.password)
 
   axios
-      .post("/api/member/join", {
+      .post("/api/join", {
+        loginId: form.loginId,
+        password: form.password,
         name: form.name,
         phone: form.phone1+form.phone2+form.phone3,
         address: {
@@ -61,7 +46,14 @@ const onSubmit = () => {
 
 <template>
   <el-form :model="form" label-width="120px">
-    <el-form-item label="Name">
+
+    <el-form-item label="아이디">
+      <el-input v-model="form.loginId" />
+    </el-form-item>
+    <el-form-item label="비밀번호">
+      <el-input v-model="form.password" />
+    </el-form-item>
+    <el-form-item label="이름">
       <el-input v-model="form.name" />
     </el-form-item>
     <el-form-item label="Phone">
