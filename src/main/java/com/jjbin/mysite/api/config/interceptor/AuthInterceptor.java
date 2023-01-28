@@ -1,16 +1,19 @@
-package com.jjbin.mysite.api.interceptor;
+package com.jjbin.mysite.api.config.interceptor;
 
 import com.jjbin.mysite.api.SessionConst;
+import com.jjbin.mysite.api.exception.Unauthorized;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.web.servlet.HandlerInterceptor;
-import org.springframework.web.servlet.ModelAndView;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
 
+/**
+ * TODO 인터셉터와 아규먼트리졸버와 기능 중복 -> 리팩토링 할 것
+ */
 @Slf4j
-public class LoginCheckInterceptor implements HandlerInterceptor {
+public class AuthInterceptor implements HandlerInterceptor {
 
     @Override
     public boolean preHandle(HttpServletRequest request, HttpServletResponse response, Object handler) throws Exception {
@@ -21,10 +24,9 @@ public class LoginCheckInterceptor implements HandlerInterceptor {
         HttpSession session = request.getSession(false);
 
         if (session == null || session.getAttribute(SessionConst.LOGIN_MEMBER) == null) {
-            log.info("미인증 사용자 요청");
-            response.setStatus(404);
-            return false;
+            throw new Unauthorized();
         }
+
         return true;
     }
 

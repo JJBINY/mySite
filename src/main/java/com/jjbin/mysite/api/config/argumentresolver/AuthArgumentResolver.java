@@ -1,4 +1,4 @@
-package com.jjbin.mysite.api.argumentresolver;
+package com.jjbin.mysite.api.config.argumentresolver;
 
 import com.jjbin.mysite.api.SessionConst;
 import com.jjbin.mysite.api.domain.Member;
@@ -13,7 +13,7 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpSession;
 
 @Slf4j
-public class LoginMemberArgumentResolver implements HandlerMethodArgumentResolver {
+public class AuthArgumentResolver implements HandlerMethodArgumentResolver {
 
     @Override
     public boolean supportsParameter(MethodParameter parameter) {

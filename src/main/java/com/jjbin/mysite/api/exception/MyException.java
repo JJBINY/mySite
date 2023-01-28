@@ -14,13 +14,10 @@ public abstract class MyException extends RuntimeException{
         super(message);
     }
 
-    public MyException(String message, Throwable cause) {
-        super(message, cause);
-    }
 
     public abstract int getStatusCode();
 
-    public void addValidation(String fieldName, String message){
-        validation.put(fieldName, message);
+    public void addValidation(String fieldName, String fieldMessage){
+        validation.put(fieldName, fieldMessage);
     }
 }

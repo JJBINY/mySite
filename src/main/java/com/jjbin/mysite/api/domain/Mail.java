@@ -1,5 +1,6 @@
 package com.jjbin.mysite.api.domain;
 
+import com.jjbin.mysite.api.request.MailCreate;
 import lombok.*;
 import org.springframework.data.annotation.CreatedDate;
 
@@ -20,22 +21,35 @@ public class Mail {
     @JoinColumn(name = "member_id")
     private Member member;
 
+    private String destination;
+
     private String title;
 
     @Lob
     private String content;
 
 
-    private LocalDateTime createdDate;
+    private LocalDateTime createdAt;
 
-
-    public void setCreatedDate(LocalDateTime createdDate) {
-        this.createdDate = createdDate;
-    }
 
     @Builder
-    public Mail(String title, String content) {
+    public Mail(Member member, String destination, String title, String content) {
         this.title = title;
         this.content = content;
+        this.member = member;
+        this.destination = destination;
+        createdAt = LocalDateTime.now();
+    }
+
+    //==생성 메서드==//
+    public static Mail createMail(MailCreate mailCreate, Member member){
+        Mail mail = Mail.builder()
+                .member(member)
+                .destination(mailCreate.getDestination())
+                .title(mailCreate.getTitle())
+                .content(mailCreate.getContent())
+                .build();
+
+        return mail;
     }
 }

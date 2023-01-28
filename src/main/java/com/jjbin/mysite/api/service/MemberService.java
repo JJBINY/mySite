@@ -3,7 +3,10 @@ package com.jjbin.mysite.api.service;
 
 import com.jjbin.mysite.api.domain.Mail;
 import com.jjbin.mysite.api.domain.Member;
+import com.jjbin.mysite.api.exception.Conflicted;
+import com.jjbin.mysite.api.exception.ObjectNotFound;
 import com.jjbin.mysite.api.repository.MemberRepository;
+import com.jjbin.mysite.api.request.MemberCreate;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
@@ -24,13 +27,18 @@ public class MemberService {
      * 회원가입
      */
     @Transactional
-    public Long join(Member member) {
+    public Long join(MemberCreate memberCreate) {
+        if(memberRepository.findByLoginId(memberCreate.getLoginId()).isPresent()){
+            throw new Conflicted("이미 존재하는 회원 아이디");
+        }
+
+        Member member = Member.createMember(memberCreate);
         Member save = memberRepository.save(member);
         return save.getId();
     }
 
     /**
-     * 회원탈퇴
+     * TODO 회원탈퇴
      */
     @Transactional
     public void withdraw(Long id){
@@ -38,31 +46,28 @@ public class MemberService {
     }
 
     /**
-     * @return null이면 로그인 실패
+     * 로그인 - 아이디와 비밀번호가 저장된 데이터와 일치하는지 확인
      */
     public Member login(String loginId, String password){
-        Optional<Member> member = memberRepository.findByLoginId(loginId);
         log.info("요청 로그인아이디 = {}", loginId);
-        return member
+        Member member = memberRepository.findByLoginId(loginId)
                 .filter(m -> m.getPassword().equals(password))
                 .orElse(null);
+        if(member == null){
+            throw new ObjectNotFound("아이디 또는 비밀번호가 잘못되었습니다.");
+        }
+        return member;
 
+    }
+
+    public Member findOne(Long id){
+        return memberRepository.findById(id)
+                .orElseThrow(()->new ObjectNotFound("존재하지 않는 회원입니다."));
     }
 
     public List<Member> findAll(){
         return memberRepository.findAll();
     }
-
-    public Optional<Member> findOne(Long id){
-        return memberRepository.findById(id);
-    }
-
-    /**
-     * 회원 메일 조회
-     * 회원 id로 회원의 메일 조회
-     */
-    public List<Mail> findMails(Long id){
-        return memberRepository.findMailsById(id);}
 
 
 }

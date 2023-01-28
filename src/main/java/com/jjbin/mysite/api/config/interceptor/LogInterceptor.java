@@ -1,4 +1,4 @@
-package com.jjbin.mysite.api.interceptor;
+package com.jjbin.mysite.api.config.interceptor;
 
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.web.bind.annotation.RequestMapping;

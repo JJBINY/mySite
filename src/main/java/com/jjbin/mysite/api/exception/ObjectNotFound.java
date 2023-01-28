@@ -15,9 +15,6 @@ public class ObjectNotFound extends MyException{
         super(message);
     }
 
-    public ObjectNotFound(String message, Throwable cause) {
-        super(message, cause);
-    }
 
     @Override
     public int getStatusCode() {

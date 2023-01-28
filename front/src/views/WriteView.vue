@@ -8,18 +8,12 @@ const sender = ref("")
 const receiver = ref("")
 const title = ref("")
 const content = ref("")
-const form = ref("[]")
+let member = ref({})
 
-//TODO : 세션 조회해서 sender 자동으로 채우기
 axios.get("/api/member")
     .then((response) =>{
       console.log("세션조회")
-      // router.replace({name: "login"})
-      // router.push("login");
-      // // response.data.forEach((r: any) => {
-      // //   form.value.push(r);
-      // // })
-      // console.log(form.value)
+      member.value = response.data;
     })
     .catch((c) => {
           router.push("login")
@@ -31,7 +25,7 @@ const write = function () {
   axios
       .post("/api/mail/create", {
         title: title.value,
-        content: content.value
+        content: content.value,
       })
       .then(() => {
         router.replace({name: "home"})
@@ -46,11 +40,13 @@ const cancel = function (){
 </script>
 
 <template>
-
+<!--  //TODO 뷰 구조 변경 필요-->
   <div>
-    <el-input v-model="sender" placeholder="보내는 이"/>
+    보내는 이
+<!--    <el-input v-model="sender" placeholder="" model-value = {member.id} />-->
   </div>
   <div>
+    받는 이
     <el-input v-model="receiver" placeholder="받는 이"/>
   </div>
 

@@ -1,5 +1,7 @@
 package com.jjbin.mysite.api.domain;
 
+import com.jjbin.mysite.api.request.MailCreate;
+import com.jjbin.mysite.api.request.MemberCreate;
 import lombok.AccessLevel;
 import lombok.Builder;
 import lombok.Getter;
@@ -35,10 +37,23 @@ public class Member {
 
     @Builder
     public Member( String name, String phone, Address address, String loginId, String password) {
+        this.loginId = loginId;
+        this.password = password;
         this.name = name;
         this.phone = phone;
         this.address = address;
-        this.loginId = loginId;
-        this.password = password;
+    }
+
+    //==생성 메서드==//
+    public static Member createMember(MemberCreate memberCreate){
+        Member member = Member.builder()
+                .loginId(memberCreate.getLoginId())
+                .password(memberCreate.getPassword())
+                .name(memberCreate.getName())
+                .phone(memberCreate.getPhone())
+                .address(memberCreate.getAddress())
+                .build();
+
+        return member;
     }
 }
