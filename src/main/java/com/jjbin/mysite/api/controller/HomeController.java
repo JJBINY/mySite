@@ -1,6 +1,6 @@
 package com.jjbin.mysite.api.controller;
 
-import com.jjbin.mysite.api.argumentresolver.Login;
+import com.jjbin.mysite.api.config.argumentresolver.Login;
 import com.jjbin.mysite.api.domain.Member;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.ui.Model;

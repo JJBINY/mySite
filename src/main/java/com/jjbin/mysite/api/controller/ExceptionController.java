@@ -9,6 +9,8 @@ import org.springframework.validation.FieldError;
 import org.springframework.web.bind.MethodArgumentNotValidException;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.Set;
+
 
 @Slf4j
 @ControllerAdvice
@@ -20,6 +22,7 @@ public class ExceptionController {
     @ResponseStatus(HttpStatus.BAD_REQUEST)
     @ExceptionHandler(MethodArgumentNotValidException.class)
     public ErrorResponse invalidRequestHandler(MethodArgumentNotValidException e) {
+
         ErrorResponse response = ErrorResponse.builder()
                 .code("400")
                 .message("잘못된 요청입니다.")
@@ -42,10 +45,14 @@ public class ExceptionController {
         ErrorResponse body = ErrorResponse.builder()
                 .code(String.valueOf(statusCode))
                 .message(e.getMessage())
-                .validation(e.getValidation())
                 .build();
 
-        ResponseEntity<ErrorResponse> response = ResponseEntity.status(statusCode)
+        for (String field : e.getValidation().keySet()) {
+            body.addValidation(field,e.getValidation().get(field));
+        }
+
+        ResponseEntity<ErrorResponse> response = ResponseEntity
+                .status(statusCode)
                 .body(body);
 
         return response;

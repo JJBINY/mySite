@@ -1,4 +1,4 @@
-package com.jjbin.mysite.api.argumentresolver;
+package com.jjbin.mysite.api.config.argumentresolver;
 
 import java.lang.annotation.ElementType;
 import java.lang.annotation.Retention;

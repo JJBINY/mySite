@@ -12,15 +12,17 @@ import java.time.LocalDateTime;
 public class MailResponse {
 
     private Long id;
+    private String destination;
     private String title;
     private String content;
 
-    private LocalDateTime createdDate;
+    private LocalDateTime createdAt;
     public MailResponse(Mail mail) {
         this.id = mail.getId();
+        this.destination = mail.getDestination();
         this.title = mail.getTitle();
         this.content = mail.getContent();
-        this.createdDate = mail.getCreatedDate();
+        this.createdAt = mail.getCreatedAt();
     }
 
     @Builder

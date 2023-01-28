@@ -2,9 +2,8 @@ package com.jjbin.mysite.api.request;
 
 import com.jjbin.mysite.api.exception.InvalidRequest;
 import lombok.*;
-import org.springframework.util.Assert;
 
-import javax.persistence.*;
+import javax.persistence.Lob;
 import javax.validation.constraints.NotBlank;
 
 
@@ -13,23 +12,23 @@ import javax.validation.constraints.NotBlank;
 @EqualsAndHashCode
 public class MailCreate {
 
+    @NotBlank(message = "목적지 주소를 입력해주세요.")
+    private String destination;
+
     @NotBlank(message = "제목을 입력해주세요.")
     private String title;
 
     @Lob
     private String content;
 
-
     @Builder
-    public MailCreate(String title, String content) {
-        Assert.hasText(title,"제목은 필수입니다."); //
+    public MailCreate(String destination, String title, String content) {
+        this.destination = destination;
         this.title = title;
         this.content = content;
+
     }
 
     public void validate() {
-        if(title.length()<4){
-            throw new InvalidRequest("title", "제목은 4자 이상이어야 합니다.");
-        }
     }
 }

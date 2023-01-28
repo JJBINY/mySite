@@ -11,9 +11,9 @@ public class InvalidRequest extends MyException{
         super(DEFAULT_MESSAGE);
     }
 
-    public InvalidRequest(String fieldName, String message) {
-        super(message);
-        addValidation(fieldName,message);
+    public InvalidRequest(String fieldName, String fieldMessage) {
+        super(DEFAULT_MESSAGE);
+        addValidation(fieldName,fieldMessage);
     }
 
     @Override

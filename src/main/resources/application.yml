@@ -13,6 +13,12 @@ spring:
       hibernate:
         format_sql: true
 
+server:
+  servlet:
+    session:
+      timeout: 1800
+
 logging:
   level:
     org.hibernate.sql: debug
+
