@@ -1,4 +1,4 @@
-package com.jjbin.mysite.api.request;
+package com.jjbin.mysite.api.request.create;
 
 import com.jjbin.mysite.api.domain.Address;
 import com.jjbin.mysite.api.exception.Conflicted;

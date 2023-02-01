@@ -4,10 +4,8 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import com.jjbin.mysite.api.SessionConst;
 import com.jjbin.mysite.api.domain.Address;
 import com.jjbin.mysite.api.domain.Member;
-import com.jjbin.mysite.api.exception.ObjectNotFound;
 import com.jjbin.mysite.api.repository.MemberRepository;
-import com.jjbin.mysite.api.request.MemberCreate;
-import org.assertj.core.api.Assertions;
+import com.jjbin.mysite.api.request.create.MemberCreate;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
@@ -18,13 +16,7 @@ import org.springframework.http.MediaType;
 import org.springframework.mock.web.MockHttpSession;
 import org.springframework.test.web.servlet.MockMvc;
 
-import javax.servlet.http.HttpSession;
-import java.util.List;
-import java.util.stream.Collectors;
-import java.util.stream.IntStream;
-
 import static org.assertj.core.api.Assertions.assertThat;
-import static org.junit.jupiter.api.Assertions.*;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
 import static org.springframework.test.web.servlet.result.MockMvcResultHandlers.print;

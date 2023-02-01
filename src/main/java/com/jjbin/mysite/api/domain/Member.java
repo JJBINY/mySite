@@ -1,13 +1,13 @@
 package com.jjbin.mysite.api.domain;
 
-import com.jjbin.mysite.api.request.MailCreate;
-import com.jjbin.mysite.api.request.MemberCreate;
+import com.jjbin.mysite.api.request.create.MemberCreate;
 import lombok.AccessLevel;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 
 import javax.persistence.*;
+import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -22,15 +22,13 @@ public class Member {
 
     private String loginId;     //로그인 ID
     private String password;    //로그인 비밀번호
-
     private String name;        //사용자 이름
-
     private String phone;       //공백없는 문자열 핸드폰번호
-
+    private LocalDateTime createdAt; // 가입일
     @Embedded
     private Address address;
 
-    //cascade옵션 좀 더 공부 필요
+    //TODO cascade옵션 좀 더 공부 필요
     @OneToMany(mappedBy = "member", cascade = CascadeType.ALL)
     private List<Mail> mails = new ArrayList<>();
 
@@ -42,6 +40,7 @@ public class Member {
         this.name = name;
         this.phone = phone;
         this.address = address;
+        createdAt = LocalDateTime.now();
     }
 
     //==생성 메서드==//

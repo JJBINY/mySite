@@ -1,0 +1,11 @@
+### 메일 작성 요청
+
+POST http://localhost:8080/mail/create
+Content-Type: application/json
+#Authorization:
+
+{
+  "destination": "sisoya0424@gmail.com",
+  "title": "javamail test",
+  "content": "test content"
+}

@@ -1,19 +1,17 @@
 package com.jjbin.mysite.api.service;
 
 
-import com.jjbin.mysite.api.domain.Mail;
 import com.jjbin.mysite.api.domain.Member;
 import com.jjbin.mysite.api.exception.Conflicted;
 import com.jjbin.mysite.api.exception.ObjectNotFound;
 import com.jjbin.mysite.api.repository.MemberRepository;
-import com.jjbin.mysite.api.request.MemberCreate;
+import com.jjbin.mysite.api.request.create.MemberCreate;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
-import java.util.Optional;
 
 @Service
 @RequiredArgsConstructor

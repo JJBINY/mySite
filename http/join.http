@@ -1,0 +1,11 @@
+### 회원가입 요청
+
+POST http://localhost:8080/join
+Content-Type: application/json
+#Authorization:
+
+{
+  "name": "testName",
+  "loginId": "testId",
+  "password": "testPassword"
+}

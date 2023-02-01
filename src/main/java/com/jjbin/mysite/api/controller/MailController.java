@@ -1,8 +1,8 @@
 package com.jjbin.mysite.api.controller;
 
 import com.jjbin.mysite.api.domain.Member;
-import com.jjbin.mysite.api.request.MailCreate;
-import com.jjbin.mysite.api.request.MailSearch;
+import com.jjbin.mysite.api.request.create.MailCreate;
+import com.jjbin.mysite.api.request.SearchOption;
 import com.jjbin.mysite.api.response.MailResponse;
 import com.jjbin.mysite.api.service.MailService;
 import lombok.RequiredArgsConstructor;
@@ -35,9 +35,9 @@ public class MailController {
 
 
     @GetMapping("/mail/list")
-    public List<MailResponse> mails(@ModelAttribute MailSearch mailSearch, HttpServletRequest request) {
+    public List<MailResponse> mailList(@ModelAttribute SearchOption searchOption, HttpServletRequest request) {
         Member member = (Member) request.getSession(false).getAttribute(LOGIN_MEMBER);
-        return mailService.findList(mailSearch,member.getId()).stream()
+        return mailService.findList(searchOption,member.getId()).stream()
                 .map(MailResponse::new)
                 .collect(Collectors.toList());
     }
