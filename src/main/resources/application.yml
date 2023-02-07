@@ -1,4 +1,6 @@
 spring:
+  mvc:
+    static-path-pattern: "/resources/**"
   mail:
     host: smtp.gmail.com
     port: 587

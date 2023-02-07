@@ -1,0 +1,27 @@
+= mySite API
+:doctype: book
+:icnos: font
+:source-highlighter: highlightjs
+:toc: left
+:toclevels: 2
+:sectlinks:
+
+== icon:회원가입[]
+=== 요청
+include::{snippets}/member-join/http-request.adoc[]
+include::{snippets}/member-join/request-fields.adoc[]
+=== 응답:성공
+include::{snippets}/member-join/http-response.adoc[]
+=== 응답:실패
+include::{snippets}/member-join-fail/http-response.adoc[]
+include::{snippets}/member-join-fail/response-fields.adoc[]
+
+== icon:회원조회[]
+=== 요청
+include::{snippets}/member-find/http-request.adoc[]
+=== 응답:성공
+include::{snippets}/member-find/http-response.adoc[]
+include::{snippets}/member-find/response-fields.adoc[]
+=== 응답:실패
+include::{snippets}/member-find-fail/http-response.adoc[]
+include::{snippets}/member-find-fail/response-fields.adoc[]

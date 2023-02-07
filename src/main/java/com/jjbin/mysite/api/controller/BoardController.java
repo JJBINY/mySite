@@ -1,6 +1,9 @@
 package com.jjbin.mysite.api.controller;
 
+import com.jjbin.mysite.api.domain.Board;
 import com.jjbin.mysite.api.domain.Member;
+import com.jjbin.mysite.api.exception.ObjectNotFound;
+import com.jjbin.mysite.api.exception.Unauthorized;
 import com.jjbin.mysite.api.request.BoardEdit;
 import com.jjbin.mysite.api.request.SearchOption;
 import com.jjbin.mysite.api.request.create.BoardCreate;
@@ -30,8 +33,14 @@ public class BoardController {
 
         boardCreate.validate();
         Member member = (Member) request.getSession().getAttribute(LOGIN_MEMBER);
+        Board board = Board.createBoard(boardCreate, member);
+        boardService.write(board);
+    }
 
-        boardService.write(boardCreate,member);
+    @GetMapping("/board/watch/{boardId}")
+    public BoardResponse getOne(@PathVariable Long boardId){
+//        Member member = (Member) request.getSession(false).getAttribute(LOGIN_MEMBER);
+        return new BoardResponse(boardService.findOne(boardId));
     }
 
 
@@ -44,21 +53,25 @@ public class BoardController {
     }
 
 
-    @GetMapping("/board/{boardId}")
-    public BoardResponse getOne(@PathVariable Long boardId,HttpServletRequest request){
-        Member member = (Member) request.getSession(false).getAttribute(LOGIN_MEMBER);
-        return new BoardResponse(boardService.findOne(boardId));
-    }
-
     @PatchMapping("/board/{boardId}")
     public void edit(@PathVariable Long boardId, @RequestBody @Valid BoardEdit boardEdit, HttpServletRequest request){
         Member member = (Member) request.getSession(false).getAttribute(LOGIN_MEMBER);
-        boardService.edit(boardId,boardEdit,member);
+        Board board = boardService.findOne(boardId);
+
+        if (board.getMember().getId() != member.getId()) {
+            throw new Unauthorized();
+        }
+        boardService.edit(board,boardEdit);
     }
 
     @DeleteMapping("/board/{boardId}")
     public void delete(@PathVariable Long boardId, HttpServletRequest request){
         Member member = (Member) request.getSession(false).getAttribute(LOGIN_MEMBER);
-        boardService.delete(boardId, member);
+        Board board = boardService.findOne(boardId);
+
+        if (board.getMember().getId() != member.getId()) {
+            throw new Unauthorized();
+        }
+        boardService.delete(boardId);
     }
 }

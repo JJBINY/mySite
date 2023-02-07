@@ -22,4 +22,6 @@ public class HomeController {
         model.addAttribute("member", loginMember);//꺼내쓰기
         return "loginHome";
     }
+
+
 }

@@ -6,6 +6,7 @@ import com.jjbin.mysite.api.exception.ObjectNotFound;
 import com.jjbin.mysite.api.exception.Unauthorized;
 import com.jjbin.mysite.api.repository.MemberRepository;
 import com.jjbin.mysite.api.repository.board.BoardRepository;
+import com.jjbin.mysite.api.repository.mail.MailRepository;
 import com.jjbin.mysite.api.request.BoardEdit;
 import com.jjbin.mysite.api.request.SearchOption;
 import com.jjbin.mysite.api.request.create.BoardCreate;
@@ -30,6 +31,8 @@ class BoardServiceTest {
     @Autowired
     private MemberRepository memberRepository;
 
+
+
     @BeforeEach
     void beforeEach() {
         boardRepository.deleteAll();
@@ -52,10 +55,11 @@ class BoardServiceTest {
                 .content("내용")
                 .build();
 
+        Board createdBoard = Board.createBoard(boardCreate, member);
         long count = boardRepository.count();
 
         // when
-        Long saveId = boardService.write(boardCreate, member);
+        Long saveId = boardService.write(createdBoard);
         Board board = boardRepository.findOne(saveId).orElse(null);
 
         // then
@@ -66,6 +70,7 @@ class BoardServiceTest {
         assertThat(board.getMember().getName()).isEqualTo("이름");
         assertThat(board.getMember().getLoginId()).isEqualTo("아이디");
     }
+
 
     @Test
     @DisplayName("게시글 1개 조회")
@@ -156,6 +161,7 @@ class BoardServiceTest {
             assertThat(list.get(4 - i).getTitle()).isEqualTo("제목" + i);
         }
     }
+
     @Test
     @DisplayName("게시글 여러개 조회 - 키워드 포함")
     void test3_2() {
@@ -220,45 +226,12 @@ class BoardServiceTest {
                 .content("내용2")
                 .build();
         //when
-        boardService.edit(board.getId(),boardEdit,member);
-        Board one = boardService.findOne(board.getId());
+        boardService.edit(board,boardEdit);
+        Board findBoard = boardRepository.findOne(board.getId()).get();
+
         //then
-        assertThat(one.getTitle()).isEqualTo("수정");
-        assertThat(one.getContent()).isEqualTo("내용2");
-
-    }
-    @Test
-    @DisplayName("게시글 수정 - 권한 없는 사용자")
-    void test4_2() {
-        //given
-        Member member = memberRepository.save(
-                Member.builder()
-                        .name("이름")
-                        .loginId("아이디")
-                        .build()
-        );
-
-        Member member2 = memberRepository.save(
-                Member.builder()
-                        .name("이름2")
-                        .loginId("아이디2")
-                        .build()
-        );
-
-        BoardCreate boardCreate = BoardCreate.builder()
-                .title("제목")
-                .content("내용")
-                .build();
-
-        Board board = boardRepository.save(Board.createBoard(boardCreate, member));
-
-        BoardEdit boardEdit = BoardEdit.builder()
-                .title("수정")
-                .content("내용2")
-                .build();
-        //expected
-        assertThatThrownBy(()->boardService.edit(board.getId(),boardEdit,member2))
-                .isInstanceOf(Unauthorized.class);
+        assertThat(findBoard.getTitle()).isEqualTo("수정");
+        assertThat(findBoard.getContent()).isEqualTo("내용2");
 
     }
 
@@ -282,66 +255,16 @@ class BoardServiceTest {
 
         long count = boardRepository.count();
         //when
-        boardService.delete(board.getId(),member);
+        boardService.delete(board.getId());
 
         //then
         assertThat(boardRepository.count()).isEqualTo(count - 1);
-        assertThatThrownBy(() -> boardService.delete(board.getId(), member))
+        assertThatThrownBy(() -> boardService.delete(board.getId()))
                 .isInstanceOf(ObjectNotFound.class);
         assertThatThrownBy(() -> boardService.findOne(board.getId()))
                 .isInstanceOf(ObjectNotFound.class);
-
     }
 
-    @Test
-    @DisplayName("게시글 삭제 - 존재하지 않는 글")
-    void test5_2() {
-        //given
-        Member member = memberRepository.save(
-                Member.builder()
-                        .name("이름")
-                        .loginId("아이디")
-                        .build()
-        );
 
-        BoardCreate boardCreate = BoardCreate.builder()
-                .title("제목")
-                .content("내용")
-                .build();
 
-        Board board = boardRepository.save(Board.createBoard(boardCreate, member));
-
-        //expected
-        assertThatThrownBy(()->boardService.delete(board.getId()+1,member))
-                .isInstanceOf(ObjectNotFound.class);
-    }
-
-    @Test
-    @DisplayName("게시글 삭제 - 권한 없는 사용자")
-    void test5_3() {
-        //given
-        Member member = memberRepository.save(
-                Member.builder()
-                        .name("이름")
-                        .loginId("아이디")
-                        .build()
-        );
-        Member member2 = memberRepository.save(
-                Member.builder()
-                        .name("이름2")
-                        .loginId("아이디2")
-                        .build()
-        );
-
-        BoardCreate boardCreate = BoardCreate.builder()
-                .title("제목")
-                .content("내용")
-                .build();
-
-        Board board = boardRepository.save(Board.createBoard(boardCreate, member));
-
-        //expected
-        assertThatThrownBy(() -> boardService.delete(board.getId(), member2))
-                .isInstanceOf(Unauthorized.class);
-    }
 }

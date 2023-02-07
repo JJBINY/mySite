@@ -25,11 +25,8 @@ public class BoardService {
     private final BoardRepository boardRepository;
 
     @Transactional
-    public Long write(BoardCreate boardCreate, Member member) {
-        Board board = Board.createBoard(boardCreate, member);
-        Board save = boardRepository.save(board);
-        //TODO send
-        return save.getId();
+    public Long write(Board board) {
+        return boardRepository.save(board).getId();
     }
 
     public Board findOne(Long id) {
@@ -54,23 +51,18 @@ public class BoardService {
     }
 
     @Transactional
-    public void edit(Long id, BoardEdit boardEdit, Member member){
-        Board board = boardRepository.findOne(id)
-                .orElseThrow(ObjectNotFound::new);
-        if (board.getMember().getId() != member.getId()) {
-            throw new Unauthorized();
-        }
+    public void edit(Board board, BoardEdit boardEdit){
+
         board.edit(boardEdit);
+        boardRepository.save(board); //controller단에서 board 가지고 와서 더티체킹 작동안함
+
     }
 
 
     @Transactional
-    public void delete(Long id, Member member){
-        Board board = boardRepository.findOne(id)
+    public void delete(Long boardId){
+        Board board = boardRepository.findOne(boardId)
                 .orElseThrow(ObjectNotFound::new);
-        if (board.getMember().getId() != member.getId()) {
-            throw new Unauthorized();
-        }
         boardRepository.delete(board);
     }
 

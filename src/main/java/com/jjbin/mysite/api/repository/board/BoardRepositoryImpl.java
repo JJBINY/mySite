@@ -18,7 +18,7 @@ public class BoardRepositoryImpl implements BoardRepositoryCustom {
     @Override
     public List<Board> findAll(SearchOption searchOption) {
 
-        if(!searchOption.getKeyword().isBlank()){
+        if(searchOption.getKeyword() !=null){
             return em.createQuery("select b from Board b" +
                             " join fetch b.member mb" +
                             " where b.title like concat('%',:keyword,'%')" +
