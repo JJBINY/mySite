@@ -37,7 +37,7 @@ public class BoardRepositoryImpl implements BoardRepositoryCustom {
 
     }
     @Override
-    public List<Board> findAllWithMember(SearchOption searchOption, Long memberId) {
+    public List<Board> findAllWithMember(Long memberId, SearchOption searchOption) {
 
         return em.createQuery(
                 "select b from Board b" +

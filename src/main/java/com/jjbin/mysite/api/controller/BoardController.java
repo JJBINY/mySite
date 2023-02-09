@@ -1,14 +1,18 @@
 package com.jjbin.mysite.api.controller;
 
 import com.jjbin.mysite.api.domain.Board;
+import com.jjbin.mysite.api.domain.Comment;
 import com.jjbin.mysite.api.domain.Member;
 import com.jjbin.mysite.api.exception.ObjectNotFound;
 import com.jjbin.mysite.api.exception.Unauthorized;
 import com.jjbin.mysite.api.request.BoardEdit;
 import com.jjbin.mysite.api.request.SearchOption;
 import com.jjbin.mysite.api.request.create.BoardCreate;
+import com.jjbin.mysite.api.request.create.CommentCreate;
 import com.jjbin.mysite.api.response.BoardResponse;
+import com.jjbin.mysite.api.response.CommentResponse;
 import com.jjbin.mysite.api.service.BoardService;
+import lombok.Builder;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.web.bind.annotation.*;
@@ -38,15 +42,13 @@ public class BoardController {
     }
 
     @GetMapping("/board/watch/{boardId}")
-    public BoardResponse getOne(@PathVariable Long boardId){
-//        Member member = (Member) request.getSession(false).getAttribute(LOGIN_MEMBER);
+    public BoardResponse getOne(@PathVariable Long boardId) {
         return new BoardResponse(boardService.findOne(boardId));
     }
 
 
     @GetMapping("/board/list")
-    public List<BoardResponse> getList(@ModelAttribute SearchOption searchOption, HttpServletRequest request) {
-//        Member member = (Member) request.getSession(false).getAttribute(LOGIN_MEMBER);
+    public List<BoardResponse> getList(@ModelAttribute SearchOption searchOption) {
         return boardService.findList(searchOption).stream()
                 .map(BoardResponse::new)
                 .collect(Collectors.toList());
@@ -54,24 +56,44 @@ public class BoardController {
 
 
     @PatchMapping("/board/{boardId}")
-    public void edit(@PathVariable Long boardId, @RequestBody @Valid BoardEdit boardEdit, HttpServletRequest request){
+    public void edit(@PathVariable Long boardId, @RequestBody @Valid BoardEdit boardEdit, HttpServletRequest request) {
         Member member = (Member) request.getSession(false).getAttribute(LOGIN_MEMBER);
-        Board board = boardService.findOne(boardId);
 
-        if (board.getMember().getId() != member.getId()) {
-            throw new Unauthorized();
-        }
-        boardService.edit(board,boardEdit);
+        boardService.edit(boardId, boardEdit, member);
     }
 
     @DeleteMapping("/board/{boardId}")
-    public void delete(@PathVariable Long boardId, HttpServletRequest request){
+    public void delete(@PathVariable Long boardId, HttpServletRequest request) {
+        Member member = (Member) request.getSession(false).getAttribute(LOGIN_MEMBER);
+
+        boardService.delete(boardId,member);
+    }
+
+    //==코멘트==//
+    @PostMapping("board/{boardId}/comment")
+    public CommentResponse comment(@PathVariable Long boardId, @RequestBody @Valid CommentCreate commentCreate, HttpServletRequest request) {
         Member member = (Member) request.getSession(false).getAttribute(LOGIN_MEMBER);
         Board board = boardService.findOne(boardId);
 
-        if (board.getMember().getId() != member.getId()) {
-            throw new Unauthorized();
-        }
-        boardService.delete(boardId);
+        return new CommentResponse(boardService.comment(
+                Comment.builder()
+                        .commentCreate(commentCreate)
+                        .board(board)
+                        .member(member)
+                        .build()
+        ));
+    }
+
+    @DeleteMapping("/comment/{commentId}")
+    public void deleteComment(@PathVariable Long commentId, HttpServletRequest request) {
+        Member member = (Member) request.getSession(false).getAttribute(LOGIN_MEMBER);
+        boardService.deleteComment(commentId,member);
+    }
+
+    @GetMapping("/board/{boardId}/comments")
+    public List<CommentResponse> getComments(@PathVariable Long boardId, @ModelAttribute SearchOption searchOption) {
+        return boardService.findCommentList(boardId, searchOption).stream()
+                .map(CommentResponse::new)
+                .collect(Collectors.toList());
     }
 }

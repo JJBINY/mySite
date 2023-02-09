@@ -1,13 +1,14 @@
 package com.jjbin.mysite.api.service;
 
 import com.jjbin.mysite.api.domain.Board;
+import com.jjbin.mysite.api.domain.Comment;
 import com.jjbin.mysite.api.domain.Member;
 import com.jjbin.mysite.api.exception.ObjectNotFound;
 import com.jjbin.mysite.api.exception.Unauthorized;
+import com.jjbin.mysite.api.repository.board.CommentRepository;
 import com.jjbin.mysite.api.repository.board.BoardRepository;
 import com.jjbin.mysite.api.request.BoardEdit;
 import com.jjbin.mysite.api.request.SearchOption;
-import com.jjbin.mysite.api.request.create.BoardCreate;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
@@ -23,6 +24,7 @@ import java.util.List;
 public class BoardService {
 
     private final BoardRepository boardRepository;
+    private final CommentRepository commentRepository;
 
     @Transactional
     public Long write(Board board) {
@@ -51,22 +53,59 @@ public class BoardService {
     }
 
     @Transactional
-    public void edit(Board board, BoardEdit boardEdit){
+    public void edit(Long boardId, BoardEdit boardEdit, Member member){
+
+        Board board = boardRepository.findOne(boardId)
+                .orElseThrow(ObjectNotFound::new);
+
+        if (board.getMember().getId() != member.getId()) {
+            throw new Unauthorized();
+        }
 
         board.edit(boardEdit);
-        boardRepository.save(board); //controller단에서 board 가지고 와서 더티체킹 작동안함
 
     }
 
 
     @Transactional
-    public void delete(Long boardId){
+    public void delete(Long boardId, Member member){
         Board board = boardRepository.findOne(boardId)
                 .orElseThrow(ObjectNotFound::new);
+
+        if (board.getMember().getId() != member.getId()) {
+            throw new Unauthorized();
+        }
         boardRepository.delete(board);
     }
 
 
+    @Transactional
+    public Comment comment(Comment comment) {
+        Comment save = commentRepository.save(comment);
 
 
+        return save;
+    }
+
+    public Comment findComment(Long commentId) {
+        return commentRepository.findOne(commentId)
+                .orElseThrow(ObjectNotFound::new);
+    }
+
+    @Transactional
+    public void deleteComment(Long commentId, Member member) {
+
+        Comment comment = commentRepository.findOne(commentId)
+                .orElseThrow(ObjectNotFound::new);
+        if (comment.getMember().getId() != member.getId()) {
+            throw new Unauthorized();
+        }
+        commentRepository.delete(comment);
+    }
+
+    public List<Comment> findCommentList(Long boardId, SearchOption searchOption) {
+        searchOption.validate();
+        return commentRepository
+                .findAllWithBoard(boardId, searchOption);
+    }
 }

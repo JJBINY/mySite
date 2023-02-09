@@ -226,7 +226,7 @@ class BoardServiceTest {
                 .content("내용2")
                 .build();
         //when
-        boardService.edit(board,boardEdit);
+        boardService.edit(board.getId(),boardEdit,member);
         Board findBoard = boardRepository.findOne(board.getId()).get();
 
         //then
@@ -255,11 +255,11 @@ class BoardServiceTest {
 
         long count = boardRepository.count();
         //when
-        boardService.delete(board.getId());
+        boardService.delete(board.getId(),member);
 
         //then
         assertThat(boardRepository.count()).isEqualTo(count - 1);
-        assertThatThrownBy(() -> boardService.delete(board.getId()))
+        assertThatThrownBy(() -> boardService.delete(board.getId(),member))
                 .isInstanceOf(ObjectNotFound.class);
         assertThatThrownBy(() -> boardService.findOne(board.getId()))
                 .isInstanceOf(ObjectNotFound.class);

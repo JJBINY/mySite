@@ -32,6 +32,8 @@ public class Member {
     @OneToMany(mappedBy = "member", cascade = CascadeType.ALL)
     private List<Mail> mails = new ArrayList<>();
 
+    @OneToMany(mappedBy = "member", cascade = CascadeType.ALL)
+    private List<Board> boards = new ArrayList<>();
 
     @Builder
     public Member( String name, String phone, Address address, String loginId, String password) {

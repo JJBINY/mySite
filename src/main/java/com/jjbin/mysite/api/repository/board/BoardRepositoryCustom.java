@@ -9,6 +9,6 @@ import java.util.Optional;
 public interface BoardRepositoryCustom {
 
     List<Board> findAll(SearchOption searchOption);
-    List<Board> findAllWithMember(SearchOption searchOption, Long memberId);
+    List<Board> findAllWithMember(Long memberId, SearchOption searchOption);
     Optional<Board> findOneWithMember(Long boardId, Long memberId);
 }

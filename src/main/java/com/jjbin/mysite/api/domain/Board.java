@@ -9,6 +9,8 @@ import lombok.NoArgsConstructor;
 
 import javax.persistence.*;
 import java.time.LocalDateTime;
+import java.util.ArrayList;
+import java.util.List;
 
 @Entity
 @NoArgsConstructor
@@ -31,8 +33,13 @@ public class Board {
     @Lob
     private String content;
 
+    private Long likes;
+
     private LocalDateTime createdAt;
     private LocalDateTime lastModifiedAt;
+
+    @OneToMany(mappedBy = "board",cascade = CascadeType.ALL)
+    private List<Comment> comments = new ArrayList<>();
 
     @Builder
     public Board(Member member, String title, String content) {
@@ -41,6 +48,7 @@ public class Board {
         this.content = content;
         createdAt = LocalDateTime.now();
         lastModifiedAt = createdAt;
+        likes = 0L;
     }
 
     //==생성 메서드==//
@@ -54,6 +62,7 @@ public class Board {
         return board;
     }
 
+    //==수정 메서드==//
     public void edit(BoardEdit boardEdit){
         if (boardEdit.getTitle() != null) {
             title = boardEdit.getTitle();
