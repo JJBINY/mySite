@@ -1,4 +1,20 @@
 spring:
+  mvc:
+    static-path-pattern: "/resources/**"
+  mail:
+    host: smtp.gmail.com
+    port: 587
+    username: ${USERNAME_MAIL}
+    password: ${PASSWORD_MAIL}
+    properties:
+      mail:
+        smtp:
+          auth: true
+          starttls:
+            enable: true
+          ssl:
+            enable: true
+          socketFactory.class: javax.net.ssl.SSLSocketFactory
   datasource:
     url: jdbc:h2:tcp://localhost/~/mySite
     username: sa
@@ -8,15 +24,15 @@ spring:
     show_sql: true
     hibernate:
       ddl-auto: create
-
     properties:
       hibernate:
         format_sql: true
 
+
 server:
   servlet:
     session:
-      timeout: 1800
+      timeout: 1800 #30분
 
 logging:
   level:

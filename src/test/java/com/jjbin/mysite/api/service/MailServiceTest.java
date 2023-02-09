@@ -3,11 +3,10 @@ package com.jjbin.mysite.api.service;
 import com.jjbin.mysite.api.domain.Mail;
 import com.jjbin.mysite.api.domain.Member;
 import com.jjbin.mysite.api.exception.ObjectNotFound;
-import com.jjbin.mysite.api.repository.MailRepository;
+import com.jjbin.mysite.api.repository.mail.MailRepository;
 import com.jjbin.mysite.api.repository.MemberRepository;
-import com.jjbin.mysite.api.request.MailCreate;
-import com.jjbin.mysite.api.request.MailSearch;
-import com.jjbin.mysite.api.response.MailResponse;
+import com.jjbin.mysite.api.request.create.MailCreate;
+import com.jjbin.mysite.api.request.SearchOption;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
@@ -155,7 +154,8 @@ class MailServiceTest {
         Mail mail = mailRepository.save(Mail.createMail(mailCreate, member));
 
         //expected
-        assertThatThrownBy(() -> mailService.findOne(mail.getId()+1,member.getId())).isInstanceOf(ObjectNotFound.class);
+        assertThatThrownBy(() -> mailService.findOne(mail.getId()+1,member.getId()))
+                .isInstanceOf(ObjectNotFound.class);
     }
 
 
@@ -164,7 +164,7 @@ class MailServiceTest {
     void test3() {
         //given
 
-        MailSearch search = new MailSearch();
+        SearchOption search = new SearchOption();
         search.setSize(5);
         search.setPage(2);
 
@@ -205,6 +205,10 @@ class MailServiceTest {
 
         //then
         assertThat(mailRepository.count()).isEqualTo(count - 1);
+        assertThatThrownBy(() -> mailService.delete(mail.getId()))
+                .isInstanceOf(ObjectNotFound.class);
+        assertThatThrownBy(() -> mailService.findOne(mail.getId(), member.getId()))
+                .isInstanceOf(ObjectNotFound.class);
 
 
     }

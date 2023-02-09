@@ -1,0 +1,102 @@
+= mySite API
+:doctype: book
+:icnos: font
+:source-highlighter: highlightjs
+:toc: left
+:toclevels: 2
+:sectlinks:
+
+= icon:회원[]
+== 회원가입
+=== -요청
+include::{snippets}/member-join/http-request.adoc[]
+include::{snippets}/member-join/request-fields.adoc[]
+=== -응답:성공
+include::{snippets}/member-join/http-response.adoc[]
+=== -응답:실패
+include::{snippets}/member-join-fail/http-response.adoc[]
+include::{snippets}/member-join-fail/response-fields.adoc[]
+
+== 회원조회(인증필요)
+=== -요청
+include::{snippets}/member-find/http-request.adoc[]
+=== -응답:성공
+include::{snippets}/member-find/http-response.adoc[]
+include::{snippets}/member-find/response-fields.adoc[]
+=== -응답:실패
+include::{snippets}/member-find-fail/http-response.adoc[]
+include::{snippets}/member-find-fail/response-fields.adoc[]
+
+= icon:게시판[]
+== 글 작성(인증필요)
+=== -요청
+include::{snippets}/board-write/http-request.adoc[]
+include::{snippets}/board-write/request-fields.adoc[]
+=== -응답:성공
+include::{snippets}/board-write/http-response.adoc[]
+=== -응답:실패
+include::{snippets}/board-write-fail/http-response.adoc[]
+include::{snippets}/board-write-fail/response-fields.adoc[]
+
+== 글 단건 조회
+=== -요청
+include::{snippets}/board-watch/http-request.adoc[]
+=== -응답:성공
+include::{snippets}/board-watch/http-response.adoc[]
+include::{snippets}/board-watch/response-fields.adoc[]
+
+== 글 리스트 조회
+=== -요청
+include::{snippets}/board-list/http-request.adoc[]
+include::{snippets}/board-list/request-parameters.adoc[]
+
+=== -응답:성공
+include::{snippets}/board-list/http-response.adoc[]
+include::{snippets}/board-list/response-fields.adoc[]
+
+== 글 수정(인증필요)
+=== -요청
+include::{snippets}/board-edit/http-request.adoc[]
+include::{snippets}/board-edit/request-fields.adoc[]
+=== -응답:성공
+include::{snippets}/board-edit/http-response.adoc[]
+=== -응답:실패
+include::{snippets}/board-edit-fail/http-response.adoc[]
+include::{snippets}/board-edit-fail/response-fields.adoc[]
+
+== 글 삭제(인증필요)
+=== -요청
+include::{snippets}/board-delete/http-request.adoc[]
+=== -응답:성공
+include::{snippets}/board-delete/http-response.adoc[]
+=== -응답:실패
+include::{snippets}/board-delete-fail/http-response.adoc[]
+include::{snippets}/board-delete-fail/response-fields.adoc[]
+
+= icon:댓글[]
+== 댓글 작성(인증필요)
+=== -요청
+include::{snippets}/comment-write/http-request.adoc[]
+include::{snippets}/comment-write/request-fields.adoc[]
+=== -응답:성공
+include::{snippets}/comment-write/http-response.adoc[]
+=== -응답:실패
+include::{snippets}/comment-write-fail/http-response.adoc[]
+include::{snippets}/comment-write-fail/response-fields.adoc[]
+
+== 댓글 리스트 조회
+=== -요청
+include::{snippets}/comment-list/http-request.adoc[]
+include::{snippets}/comment-list/request-parameters.adoc[]
+=== -응답:성공
+include::{snippets}/comment-list/http-response.adoc[]
+include::{snippets}/comment-list/response-fields.adoc[]
+
+== 댓글 삭제(인증필요)
+=== -요청
+include::{snippets}/comment-delete/http-request.adoc[]
+=== -응답:성공
+include::{snippets}/comment-delete/http-response.adoc[]
+=== -응답:실패
+include::{snippets}/comment-delete-fail/http-response.adoc[]
+include::{snippets}/comment-delete-fail/response-fields.adoc[]

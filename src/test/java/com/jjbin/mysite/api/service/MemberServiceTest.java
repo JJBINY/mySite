@@ -5,7 +5,7 @@ import com.jjbin.mysite.api.domain.Member;
 import com.jjbin.mysite.api.exception.Conflicted;
 import com.jjbin.mysite.api.exception.ObjectNotFound;
 import com.jjbin.mysite.api.repository.MemberRepository;
-import com.jjbin.mysite.api.request.MemberCreate;
+import com.jjbin.mysite.api.request.create.MemberCreate;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;

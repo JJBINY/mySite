@@ -1,7 +1,7 @@
-package com.jjbin.mysite.api.repository;
+package com.jjbin.mysite.api.repository.mail;
 
 import com.jjbin.mysite.api.domain.Mail;
-import com.jjbin.mysite.api.request.MailSearch;
+import com.jjbin.mysite.api.request.SearchOption;
 import lombok.RequiredArgsConstructor;
 
 import javax.persistence.EntityManager;
@@ -16,7 +16,7 @@ public class MailRepositoryImpl implements MailRepositoryCustom {
 
 
     @Override
-    public List<Mail> findAllWithMember(MailSearch mailSearch ,Long memberId) {
+    public List<Mail> findAllWithMember(SearchOption searchOption, Long memberId) {
 
         return em.createQuery(
                 "select m from Mail m" +
@@ -24,11 +24,12 @@ public class MailRepositoryImpl implements MailRepositoryCustom {
                         " where mb.id=:id" +
                         " order by m.id desc",Mail.class)
                 .setParameter("id",memberId)
-                .setFirstResult(mailSearch.getOffset())
-                .setMaxResults(mailSearch.getSize())
+                .setFirstResult(searchOption.getOffset())
+                .setMaxResults(searchOption.getSize())
                 .getResultList();
 
-    }    @Override
+    }
+    @Override
     public Optional<Mail> findOneWithMember(Long mailId ,Long memberId) {
         return em.createQuery(
                         "select m from Mail m" +

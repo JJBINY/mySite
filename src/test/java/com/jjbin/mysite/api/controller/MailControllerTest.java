@@ -2,14 +2,11 @@ package com.jjbin.mysite.api.controller;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.jjbin.mysite.api.SessionConst;
-import com.jjbin.mysite.api.domain.Address;
 import com.jjbin.mysite.api.domain.Mail;
 import com.jjbin.mysite.api.domain.Member;
-import com.jjbin.mysite.api.exception.ObjectNotFound;
-import com.jjbin.mysite.api.repository.MailRepository;
+import com.jjbin.mysite.api.repository.mail.MailRepository;
 import com.jjbin.mysite.api.repository.MemberRepository;
-import com.jjbin.mysite.api.request.MailCreate;
-import org.assertj.core.api.Assertions;
+import com.jjbin.mysite.api.request.create.MailCreate;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
@@ -21,7 +18,6 @@ import org.springframework.mock.web.MockHttpSession;
 import org.springframework.test.web.servlet.MockMvc;
 
 import java.util.List;
-import java.util.Optional;
 import java.util.stream.Collectors;
 import java.util.stream.IntStream;
 

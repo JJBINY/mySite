@@ -1,8 +1,7 @@
 package com.jjbin.mysite.api.domain;
 
-import com.jjbin.mysite.api.request.MailCreate;
+import com.jjbin.mysite.api.request.create.MailCreate;
 import lombok.*;
-import org.springframework.data.annotation.CreatedDate;
 
 import javax.persistence.*;
 import java.time.LocalDateTime;
