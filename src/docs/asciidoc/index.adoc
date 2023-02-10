@@ -41,6 +41,7 @@ include::{snippets}/board-write-fail/response-fields.adoc[]
 == 글 단건 조회
 === -요청
 include::{snippets}/board-watch/http-request.adoc[]
+include::{snippets}/board-watch/path-parameters.adoc[]
 === -응답:성공
 include::{snippets}/board-watch/http-response.adoc[]
 include::{snippets}/board-watch/response-fields.adoc[]
@@ -57,6 +58,7 @@ include::{snippets}/board-list/response-fields.adoc[]
 == 글 수정(인증필요)
 === -요청
 include::{snippets}/board-edit/http-request.adoc[]
+include::{snippets}/board-edit/path-parameters.adoc[]
 include::{snippets}/board-edit/request-fields.adoc[]
 === -응답:성공
 include::{snippets}/board-edit/http-response.adoc[]
@@ -67,6 +69,7 @@ include::{snippets}/board-edit-fail/response-fields.adoc[]
 == 글 삭제(인증필요)
 === -요청
 include::{snippets}/board-delete/http-request.adoc[]
+include::{snippets}/board-delete/path-parameters.adoc[]
 === -응답:성공
 include::{snippets}/board-delete/http-response.adoc[]
 === -응답:실패
@@ -77,6 +80,7 @@ include::{snippets}/board-delete-fail/response-fields.adoc[]
 == 댓글 작성(인증필요)
 === -요청
 include::{snippets}/comment-write/http-request.adoc[]
+include::{snippets}/comment-write/path-parameters.adoc[]
 include::{snippets}/comment-write/request-fields.adoc[]
 === -응답:성공
 include::{snippets}/comment-write/http-response.adoc[]
@@ -87,14 +91,26 @@ include::{snippets}/comment-write-fail/response-fields.adoc[]
 == 댓글 리스트 조회
 === -요청
 include::{snippets}/comment-list/http-request.adoc[]
+include::{snippets}/comment-list/path-parameters.adoc[]
 include::{snippets}/comment-list/request-parameters.adoc[]
 === -응답:성공
 include::{snippets}/comment-list/http-response.adoc[]
 include::{snippets}/comment-list/response-fields.adoc[]
 
+== 자식 댓글 리스트 조회
+=== -요청
+include::{snippets}/comment-children/http-request.adoc[]
+include::{snippets}/comment-children/path-parameters.adoc[]
+include::{snippets}/comment-children/request-parameters.adoc[]
+=== -응답:성공
+include::{snippets}/comment-children/http-response.adoc[]
+include::{snippets}/comment-children/response-fields.adoc[]
+
+
 == 댓글 삭제(인증필요)
 === -요청
 include::{snippets}/comment-delete/http-request.adoc[]
+include::{snippets}/comment-delete/path-parameters.adoc[]
 === -응답:성공
 include::{snippets}/comment-delete/http-response.adoc[]
 === -응답:실패
