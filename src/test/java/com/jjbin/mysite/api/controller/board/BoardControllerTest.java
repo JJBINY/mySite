@@ -1,4 +1,4 @@
-package com.jjbin.mysite.api.controller;
+package com.jjbin.mysite.api.controller.board;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.jjbin.mysite.api.SessionConst;

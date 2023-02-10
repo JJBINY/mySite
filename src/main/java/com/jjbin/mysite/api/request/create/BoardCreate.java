@@ -1,6 +1,5 @@
 package com.jjbin.mysite.api.request.create;
 
-import com.jjbin.mysite.api.domain.Category;
 import lombok.*;
 
 import javax.persistence.Lob;
@@ -14,7 +13,6 @@ public class BoardCreate {
     @NotBlank(message = "제목을 입력해주세요.")
     private String title;
 
-    private Category category;
     @Lob
     private String content;
 

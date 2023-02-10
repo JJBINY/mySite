@@ -1,4 +1,4 @@
-package com.jjbin.mysite.api.service;
+package com.jjbin.mysite.api.service.board;
 
 import com.jjbin.mysite.api.domain.Board;
 import com.jjbin.mysite.api.domain.Comment;
@@ -26,8 +26,6 @@ import java.util.List;
 public class BoardService {
 
     private final BoardRepository boardRepository;
-    private final CommentRepository commentRepository;
-    private final LikeRepository likeRepository;
 
     @Transactional
     public Long write(Board board) {
@@ -81,60 +79,4 @@ public class BoardService {
         boardRepository.delete(board);
     }
 
-    //==댓글 관련 메서드==//
-    @Transactional
-    public Comment comment(Comment comment) {
-        Comment save = commentRepository.save(comment);
-        return save;
-    }
-
-    public Comment findComment(Long commentId) {
-        return commentRepository.findOne(commentId)
-                .orElseThrow(ObjectNotFound::new);
-    }
-
-    @Transactional
-    public void deleteComment(Long commentId, Member member) {
-
-        Comment comment = commentRepository.findOne(commentId)
-                .orElseThrow(ObjectNotFound::new);
-        if (comment.getMember().getId() != member.getId()) {
-            throw new Unauthorized();
-        }
-        commentRepository.delete(comment);
-    }
-
-    public List<Comment> findCommentList(Long boardId, SearchOption searchOption) {
-        searchOption.validate();
-        return commentRepository
-                .findAllWithBoard(boardId, searchOption);
-    }
-    public List<Comment> findChildList(Long commentId, SearchOption searchOption) {
-        searchOption.validate();
-        return commentRepository
-                .findChildren(commentId, searchOption);
-    }
-
-    //==좋아요 관련 메서드==//
-    @Transactional
-    public Long like(Long boardId, Member member) {
-
-        Board board = boardRepository.findOne(boardId)
-                .orElseThrow(ObjectNotFound::new);
-
-        Like like = likeRepository.findByBoardIdAndMemberId(boardId, member.getId())
-                .orElse(null);
-
-        if(like!=null) {
-            likeRepository.delete(like);
-        }else {
-            likeRepository.save(
-                    Like.builder()
-                            .board(board)
-                            .member(member)
-                            .build()
-            );
-        }
-        return likeRepository.countLike(boardId, member.getId());
-    }
 }

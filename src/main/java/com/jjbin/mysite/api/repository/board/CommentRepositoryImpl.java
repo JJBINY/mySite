@@ -5,6 +5,7 @@ import com.jjbin.mysite.api.request.SearchOption;
 import lombok.RequiredArgsConstructor;
 
 import javax.persistence.EntityManager;
+import javax.persistence.Query;
 import java.util.List;
 
 @RequiredArgsConstructor
@@ -39,6 +40,7 @@ public class CommentRepositoryImpl implements CommentRepositoryCustom {
                 .setFirstResult(searchOption.getOffset())
                 .setMaxResults(searchOption.getSize())
                 .getResultList();
+
 
     }
     @Override
