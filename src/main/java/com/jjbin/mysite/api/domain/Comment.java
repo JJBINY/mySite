@@ -7,17 +7,26 @@ import lombok.NoArgsConstructor;
 
 import javax.persistence.*;
 import java.time.LocalDateTime;
+import java.util.ArrayList;
+import java.util.List;
 
 @Entity
 @NoArgsConstructor
 @Getter
 public class Comment {
 
-    @Id @GeneratedValue
+    @Id @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "comment_id")
     private Long id;
 
     private String content;
+
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "parent_id")
+    private Comment parent;
+
+    @OneToMany(mappedBy = "parent", cascade = CascadeType.ALL)
+    private List<Comment> child = new ArrayList<>();
 
     private LocalDateTime createdAt;
 
@@ -30,10 +39,11 @@ public class Comment {
     private Board board;
 
     @Builder
-    public Comment(CommentCreate commentCreate, Member member, Board board) {
+    public Comment(CommentCreate commentCreate, Member member, Board board, Comment parent) {
         this.content = commentCreate.getContent();
         this.member = member;
         this.board = board;
         this.createdAt = LocalDateTime.now();
+        this.parent = parent;
     }
 }

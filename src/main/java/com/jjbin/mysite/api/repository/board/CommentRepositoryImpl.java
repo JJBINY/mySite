@@ -41,5 +41,16 @@ public class CommentRepositoryImpl implements CommentRepositoryCustom {
                 .getResultList();
 
     }
+    @Override
+    public List<Comment> findChildren(Long parentId, SearchOption searchOption) {
 
+        return em.createQuery("select c from Comment c" +
+                        " where c.parent.id=:parentId" +
+                        " order by c.id desc", Comment.class)
+                .setParameter("parentId", parentId)
+                .setFirstResult(searchOption.getOffset())
+                .setMaxResults(searchOption.getSize())
+                .getResultList();
+
+    }
 }

@@ -2,6 +2,7 @@ package com.jjbin.mysite.api.controller;
 
 import com.jjbin.mysite.api.domain.Board;
 import com.jjbin.mysite.api.domain.Comment;
+import com.jjbin.mysite.api.domain.Like;
 import com.jjbin.mysite.api.domain.Member;
 import com.jjbin.mysite.api.exception.ObjectNotFound;
 import com.jjbin.mysite.api.exception.Unauthorized;
@@ -11,6 +12,7 @@ import com.jjbin.mysite.api.request.create.BoardCreate;
 import com.jjbin.mysite.api.request.create.CommentCreate;
 import com.jjbin.mysite.api.response.BoardResponse;
 import com.jjbin.mysite.api.response.CommentResponse;
+import com.jjbin.mysite.api.response.LikeNum;
 import com.jjbin.mysite.api.service.BoardService;
 import lombok.Builder;
 import lombok.RequiredArgsConstructor;
@@ -75,11 +77,16 @@ public class BoardController {
         Member member = (Member) request.getSession(false).getAttribute(LOGIN_MEMBER);
         Board board = boardService.findOne(boardId);
 
+        Comment parent = null;
+        if (commentCreate.getParentId() != null) {
+            parent = boardService.findComment(commentCreate.getParentId());
+        }
         return new CommentResponse(boardService.comment(
                 Comment.builder()
                         .commentCreate(commentCreate)
                         .board(board)
                         .member(member)
+                        .parent(parent)
                         .build()
         ));
     }
@@ -95,5 +102,21 @@ public class BoardController {
         return boardService.findCommentList(boardId, searchOption).stream()
                 .map(CommentResponse::new)
                 .collect(Collectors.toList());
+    }
+    @GetMapping("/comment/{commentId}/children")
+    public List<CommentResponse> getChildComments(@PathVariable Long commentId, @ModelAttribute SearchOption searchOption) {
+        return boardService.findChildList(commentId, searchOption).stream()
+                .map(CommentResponse::new)
+                .collect(Collectors.toList());
+    }
+
+    //==좋아요==//
+    @PostMapping("/board/{boardId}/like")
+    public LikeNum likeBoard(@PathVariable Long boardId, HttpServletRequest request) {
+        Member member = (Member) request.getSession(false).getAttribute(LOGIN_MEMBER);
+
+        return LikeNum.builder()
+                .count(boardService.like(boardId, member))
+                .build();
     }
 }

@@ -1,10 +1,14 @@
 package com.jjbin.mysite.api.repository.board;
 
 import com.jjbin.mysite.api.domain.Board;
+import com.jjbin.mysite.api.domain.Like;
 import com.jjbin.mysite.api.request.SearchOption;
 import lombok.RequiredArgsConstructor;
+import org.springframework.jdbc.core.JdbcTemplate;
+import org.springframework.jdbc.core.namedparam.NamedParameterJdbcTemplate;
 
 import javax.persistence.EntityManager;
+import javax.sql.DataSource;
 import java.util.List;
 import java.util.Optional;
 
@@ -60,4 +64,12 @@ public class BoardRepositoryImpl implements BoardRepositoryCustom {
                 .setParameter("memberId", memberId)
                 .getResultList().stream().findAny();
     }
+
+//    @Override
+//    public Like save(Like like) {
+//        String sql = "insert into likes (board_id, member_id) " +
+//                " values (:boardId, :memberId)";
+//
+//
+//    }
 }

@@ -18,7 +18,7 @@ import java.util.List;
 @EqualsAndHashCode
 public class Board {
 
-    @Id @GeneratedValue
+    @Id @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name="board_id")
     private Long id;
 
@@ -26,14 +26,15 @@ public class Board {
     @JoinColumn(name = "member_id")
     private Member member;
 
-//TODO    private String category;
+    private String category;
 
     private String title;
 
     @Lob
     private String content;
 
-    private Long likes;
+    @OneToMany(mappedBy = "board", cascade = CascadeType.ALL)
+    private List<Like> likes = new ArrayList<>();
 
     private LocalDateTime createdAt;
     private LocalDateTime lastModifiedAt;
@@ -48,7 +49,6 @@ public class Board {
         this.content = content;
         createdAt = LocalDateTime.now();
         lastModifiedAt = createdAt;
-        likes = 0L;
     }
 
     //==생성 메서드==//

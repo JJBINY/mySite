@@ -10,4 +10,7 @@ public interface CommentRepositoryCustom {
     List<Comment> findAllWithBoard(Long boardId, SearchOption searchOption);
 
     List<Comment> findAllWithMember(Long memberId, SearchOption searchOption);
+
+
+    List<Comment> findChildren(Long parentId, SearchOption searchOption);
 }

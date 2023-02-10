@@ -16,7 +16,7 @@ import java.util.List;
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 public class Member {
 
-    @Id @GeneratedValue
+    @Id @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "member_id")
     private Long id;
 
@@ -28,12 +28,14 @@ public class Member {
     @Embedded
     private Address address;
 
-    //TODO cascade옵션 좀 더 공부 필요
     @OneToMany(mappedBy = "member", cascade = CascadeType.ALL)
     private List<Mail> mails = new ArrayList<>();
 
     @OneToMany(mappedBy = "member", cascade = CascadeType.ALL)
     private List<Board> boards = new ArrayList<>();
+
+    @OneToMany(mappedBy = "member", cascade = CascadeType.ALL)
+    private List<Like> likes = new ArrayList<>();
 
     @Builder
     public Member( String name, String phone, Address address, String loginId, String password) {

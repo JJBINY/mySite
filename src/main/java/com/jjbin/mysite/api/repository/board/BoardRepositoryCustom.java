@@ -1,6 +1,7 @@
 package com.jjbin.mysite.api.repository.board;
 
 import com.jjbin.mysite.api.domain.Board;
+import com.jjbin.mysite.api.domain.Like;
 import com.jjbin.mysite.api.request.SearchOption;
 
 import java.util.List;
