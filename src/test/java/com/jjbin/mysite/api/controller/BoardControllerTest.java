@@ -4,10 +4,12 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import com.jjbin.mysite.api.SessionConst;
 import com.jjbin.mysite.api.domain.Board;
 import com.jjbin.mysite.api.domain.Comment;
+import com.jjbin.mysite.api.domain.Like;
 import com.jjbin.mysite.api.domain.Member;
 import com.jjbin.mysite.api.repository.board.CommentRepository;
 import com.jjbin.mysite.api.repository.MemberRepository;
 import com.jjbin.mysite.api.repository.board.BoardRepository;
+import com.jjbin.mysite.api.repository.board.LikeRepository;
 import com.jjbin.mysite.api.request.BoardEdit;
 import com.jjbin.mysite.api.request.create.BoardCreate;
 import com.jjbin.mysite.api.request.create.CommentCreate;
@@ -47,6 +49,8 @@ class BoardControllerTest {
     private MemberRepository memberRepository;
     @Autowired
     private CommentRepository commentRepository;
+    @Autowired
+    private LikeRepository likeRepository;
 
 
     @BeforeEach
@@ -442,7 +446,7 @@ class BoardControllerTest {
         Member member = (Member) session.getAttribute(SessionConst.LOGIN_MEMBER);
         Board board = getTestBoard(member);
 
-        CommentCreate commentCreate = new CommentCreate("댓글");
+        CommentCreate commentCreate = CommentCreate.builder().content("댓글").build();
 
         String json = objectMapper.writeValueAsString(commentCreate);
 
@@ -468,7 +472,7 @@ class BoardControllerTest {
         Member member = (Member) session.getAttribute(SessionConst.LOGIN_MEMBER);
         Board board = getTestBoard(member);
 
-        CommentCreate commentCreate = new CommentCreate("댓글");
+        CommentCreate commentCreate = CommentCreate.builder().content("댓글").build();
 
         String json = objectMapper.writeValueAsString(commentCreate);
 
@@ -491,7 +495,7 @@ class BoardControllerTest {
         Member member = (Member) session.getAttribute(SessionConst.LOGIN_MEMBER);
         Board board = getTestBoard(member);
 
-        CommentCreate commentCreate = new CommentCreate("");
+        CommentCreate commentCreate = CommentCreate.builder().content("").build();
 
         String json = objectMapper.writeValueAsString(commentCreate);
 
@@ -607,6 +611,98 @@ class BoardControllerTest {
                 .andExpect(jsonPath("$.length()").value(10))
                 .andExpect(jsonPath("$[0].content").value("댓글9"));
     }
+    @Test
+    @DisplayName("자식 댓글 리스트 조회 요청")
+    void test9() throws Exception {
+        //given
+        MockHttpSession session = getMockHttpSession();
+        Member member = (Member) session.getAttribute(SessionConst.LOGIN_MEMBER);
+        Board board = getTestBoard(member);
+
+        Comment parent = saveTestComment(member, board, "부모");
+
+        for (int i = 0; i < 10; i++) {
+            CommentCreate commentCreate = CommentCreate.builder()
+                    .content("자식"+i)
+//                    .parentId(parent.getId())
+                    .build();
+            Comment comment = Comment.builder()
+                    .member(member)
+                    .board(board)
+                    .commentCreate(commentCreate)
+                    .parent(parent)
+                    .build();
+            commentRepository.save(comment);
+        }
+
+        //expected
+        mockMvc.perform(get("/comment/{commentId}/children?size=5&page=2", parent.getId())
+                        .session(session)
+                )
+                .andDo(print())
+                .andExpect(status().isOk())
+                .andExpect(jsonPath("$.length()").value(5))
+                .andExpect(jsonPath("$[0].content").value("자식4"))
+                .andExpect(jsonPath("$[4].content").value("자식0"));
+    }
+
+    @Test
+    @DisplayName("게시글 좋아요 요청 - db에 좋아요 정보가 저장된다.")
+    void test10() throws Exception {
+        //given
+        MockHttpSession session = getMockHttpSession();
+        Member member = (Member) session.getAttribute(SessionConst.LOGIN_MEMBER);
+        Board board = getTestBoard(member);
+
+        //expected
+        mockMvc.perform(post("/board/{boardId}/like", board.getId())
+                        .session(session))
+                .andDo(print())
+                .andExpect(status().isOk())
+                .andExpect(jsonPath("$.count").value(1));
+
+    }
+    @Test
+    @DisplayName("게시글 좋아요 요청 - 이미 좋아요한 경우 좋아요가 취소된다.")
+    void test10_2() throws Exception {
+        //given
+        MockHttpSession session = getMockHttpSession();
+        Member member = (Member) session.getAttribute(SessionConst.LOGIN_MEMBER);
+        Board board = getTestBoard(member);
+
+        //when
+        likeRepository.save(
+                Like.builder()
+                        .member(member)
+                        .board(board)
+                        .build()
+        );
+        //then
+        mockMvc.perform(post("/board/{boardId}/like", board.getId())
+                        .session(session))
+                .andDo(print())
+                .andExpect(status().isOk())
+                .andExpect(jsonPath("$.count").value(0));
+
+    }
+
+    @Test
+    @DisplayName("게시글 좋아요 요청:실패 - 인증되지 않은 요청")
+    void test10_3() throws Exception {
+        //given
+        MockHttpSession session = getMockHttpSession();
+        Member member = (Member) session.getAttribute(SessionConst.LOGIN_MEMBER);
+        Board board = getTestBoard(member);
+
+        //expected
+        mockMvc.perform(post("/board/{boardId}/like", board.getId()))
+                .andDo(print())
+                .andExpect(status().isUnauthorized())
+                .andExpect(jsonPath("$.code").value(401))
+                .andExpect(jsonPath("$.message").value("인증이 필요한 요청입니다."));
+
+
+    }
 
     private Board getTestBoard(Member member) {
         BoardCreate testBoardCreate = getTestBoardCreate();
@@ -616,7 +712,7 @@ class BoardControllerTest {
     }
 
     private Comment saveTestComment(Member member, Board board, String content) {
-        CommentCreate commentCreate = new CommentCreate(content);
+        CommentCreate commentCreate = CommentCreate.builder().content(content).build();
         Comment comment = Comment.builder()
                 .member(member)
                 .board(board)

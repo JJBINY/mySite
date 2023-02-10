@@ -2,9 +2,11 @@ package com.jjbin.mysite.api.service;
 
 import com.jjbin.mysite.api.domain.Board;
 import com.jjbin.mysite.api.domain.Comment;
+import com.jjbin.mysite.api.domain.Like;
 import com.jjbin.mysite.api.domain.Member;
 import com.jjbin.mysite.api.exception.ObjectNotFound;
 import com.jjbin.mysite.api.exception.Unauthorized;
+import com.jjbin.mysite.api.repository.board.LikeRepository;
 import com.jjbin.mysite.api.repository.board.CommentRepository;
 import com.jjbin.mysite.api.repository.board.BoardRepository;
 import com.jjbin.mysite.api.request.BoardEdit;
@@ -25,6 +27,7 @@ public class BoardService {
 
     private final BoardRepository boardRepository;
     private final CommentRepository commentRepository;
+    private final LikeRepository likeRepository;
 
     @Transactional
     public Long write(Board board) {
@@ -78,12 +81,10 @@ public class BoardService {
         boardRepository.delete(board);
     }
 
-
+    //==댓글 관련 메서드==//
     @Transactional
     public Comment comment(Comment comment) {
         Comment save = commentRepository.save(comment);
-
-
         return save;
     }
 
@@ -107,5 +108,33 @@ public class BoardService {
         searchOption.validate();
         return commentRepository
                 .findAllWithBoard(boardId, searchOption);
+    }
+    public List<Comment> findChildList(Long commentId, SearchOption searchOption) {
+        searchOption.validate();
+        return commentRepository
+                .findChildren(commentId, searchOption);
+    }
+
+    //==좋아요 관련 메서드==//
+    @Transactional
+    public Long like(Long boardId, Member member) {
+
+        Board board = boardRepository.findOne(boardId)
+                .orElseThrow(ObjectNotFound::new);
+
+        Like like = likeRepository.findByBoardIdAndMemberId(boardId, member.getId())
+                .orElse(null);
+
+        if(like!=null) {
+            likeRepository.delete(like);
+        }else {
+            likeRepository.save(
+                    Like.builder()
+                            .board(board)
+                            .member(member)
+                            .build()
+            );
+        }
+        return likeRepository.countLike(boardId, member.getId());
     }
 }

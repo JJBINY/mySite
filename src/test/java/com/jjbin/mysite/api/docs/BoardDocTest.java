@@ -328,7 +328,7 @@ class BoardDocTest {
         Member member = (Member) session.getAttribute(SessionConst.LOGIN_MEMBER);
         Board board = getTestBoard(member);
 
-        CommentCreate commentCreate = new CommentCreate("댓글");
+        CommentCreate commentCreate = CommentCreate.builder().content("댓글").build();
 
         String json = objectMapper.writeValueAsString(commentCreate);
 
@@ -366,7 +366,7 @@ class BoardDocTest {
         Member member = (Member) session.getAttribute(SessionConst.LOGIN_MEMBER);
         Board board = getTestBoard(member);
 
-        CommentCreate commentCreate = new CommentCreate("");
+        CommentCreate commentCreate = CommentCreate.builder().content("").build();
 
         String json = objectMapper.writeValueAsString(commentCreate);
 
@@ -485,7 +485,7 @@ class BoardDocTest {
     }
 
     private Comment saveTestComment(Member member, Board board, String content) {
-        CommentCreate commentCreate = new CommentCreate(content);
+        CommentCreate commentCreate = CommentCreate.builder().content(content).build();
         Comment comment = Comment.builder()
                 .member(member)
                 .board(board)
