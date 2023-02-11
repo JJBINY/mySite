@@ -50,9 +50,9 @@ class MemberServiceTest {
         assertThat(member.getPassword()).isEqualTo("password");
         assertThat(member.getName()).isEqualTo("name");
         assertThat(member.getPhone()).isEqualTo("010-1234-1234");
-        assertThat(member.getAddress().getCity()).isEqualTo("seoul");
-        assertThat(member.getAddress().getStreet()).isEqualTo("gwangjin");
-        assertThat(member.getAddress().getZipcode()).isEqualTo("123");
+        assertThat(member.getAddress().getCountry()).isEqualTo("seoul");
+        assertThat(member.getAddress().getAddress()).isEqualTo("gwangjin");
+        assertThat(member.getAddress().getDetail()).isEqualTo("123");
     }
 
     @Test
@@ -159,9 +159,9 @@ class MemberServiceTest {
         assertThat(member.getPassword()).isEqualTo("password");
         assertThat(member.getName()).isEqualTo("name");
         assertThat(member.getPhone()).isEqualTo("010-1234-1234");
-        assertThat(member.getAddress().getCity()).isEqualTo("seoul");
-        assertThat(member.getAddress().getStreet()).isEqualTo("gwangjin");
-        assertThat(member.getAddress().getZipcode()).isEqualTo("123");
+        assertThat(member.getAddress().getCountry()).isEqualTo("seoul");
+        assertThat(member.getAddress().getAddress()).isEqualTo("gwangjin");
+        assertThat(member.getAddress().getDetail()).isEqualTo("123");
     }
 
     @Test

@@ -10,6 +10,6 @@ public interface LikeRepository extends JpaRepository<Like, Long> , LikeReposito
 
     Optional<Like> findByBoardIdAndMemberId(Long boardId, Long memberId);
 
-    @Query("select count(l.id) from Like l where l.board.id=:boardId and l.member.id=:memberId")
-    Long countLike(Long boardId, Long memberId);
+    @Query("select count(l.id) from Like l where l.board.id=:boardId")
+    Long countLike(Long boardId);
 }

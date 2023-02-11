@@ -62,4 +62,11 @@ public class CommentService {
                 .findChildren(commentId, searchOption);
     }
 
+    public Long countComment(Long boardId) {
+        return commentRepository.countComment(boardId);
+    }
+
+    public Long countChildrenComment(Long boardId, Long commentId) {
+        return commentRepository.countReComment(boardId, commentId);
+    }
 }

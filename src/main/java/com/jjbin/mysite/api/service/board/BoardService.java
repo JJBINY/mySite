@@ -79,4 +79,7 @@ public class BoardService {
         boardRepository.delete(board);
     }
 
+    public Long count() {
+        return boardRepository.countBoard();
+    }
 }

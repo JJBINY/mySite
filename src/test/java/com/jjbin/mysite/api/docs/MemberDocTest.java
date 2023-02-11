@@ -56,6 +56,7 @@ class MemberDocTest {
                 .loginId("로그인아이디")
                 .password("비밀번호")
                 .name("회원명")
+                .address(new Address("국가","주소","상세주소"))
                 .build();
 
         String json = objectMapper.writeValueAsString(request);
@@ -74,7 +75,13 @@ class MemberDocTest {
                                 fieldWithPath("name").description("이름")
                                         .attributes(key("constraint").value("2글자 이상")),
                                 fieldWithPath("phone").description("전화번호").optional(),
-                                fieldWithPath("address").description("주소").optional()
+                                subsectionWithPath("address").description("주소").optional()
+
+                        ),
+                        requestFields(beneathPath("address"),
+                                fieldWithPath("country").description("국가"),
+                                fieldWithPath("address").description("주소"),
+                                fieldWithPath("detail").description("상세주소")
                         )
                 ));
     }

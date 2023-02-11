@@ -21,6 +21,8 @@ axios.get("/api/")
 <!--            <RouterLink to="/write">메일 작성</RouterLink>-->
     <el-menu mode="horizontal" router>
       <el-menu-item index="/">Home</el-menu-item>
+      <el-menu-item index="/board">게시판</el-menu-item>
+
       <el-menu-item index="/write">메일 작성</el-menu-item>
       <el-menu-item index="/members">회원 조회</el-menu-item>
 
