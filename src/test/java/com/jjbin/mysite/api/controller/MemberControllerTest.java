@@ -63,7 +63,8 @@ class MemberControllerTest {
         assertThat(memberRepository.count()).isEqualTo(count+1);
         Member member = memberRepository.findAll().get(0);
         assertThat(member.getLoginId()).isEqualTo("loginId");
-        assertThat(member.getPassword()).isEqualTo("1234");
+        assertThat(member.getPassword()).isNotEqualTo("1234");
+        assertThat(member.getPassword()).isNotNull();
         assertThat(member.getName()).isEqualTo("jjbin");
     }
     @Test
@@ -173,7 +174,7 @@ class MemberControllerTest {
                 .password("1234")
                 .name("jjbin")
                 .phone("010-1234-1234")
-                .address(new Address("seoul", "myeonmok-ro", "123"))
+                .address(new Address("ROK", "myeonmok-ro 21", "123"))
                 .build();
         Member saveMember = memberRepository.save(member);
 
@@ -187,9 +188,9 @@ class MemberControllerTest {
                 .andExpect(jsonPath("$.loginId").value("loginId"))
                 .andExpect(jsonPath("$.name").value("jjbin"))
                 .andExpect(jsonPath("$.phone").value("010-1234-1234"))
-                .andExpect(jsonPath("$.address.city").value("seoul"))
-                .andExpect(jsonPath("$.address.street").value("myeonmok-ro"))
-                .andExpect(jsonPath("$.address.zipcode").value("123"))
+                .andExpect(jsonPath("$.address.country").value("ROK"))
+                .andExpect(jsonPath("$.address.address").value("myeonmok-ro 21"))
+                .andExpect(jsonPath("$.address.detail").value("123"))
                 .andDo(print());
     }
     @Test
