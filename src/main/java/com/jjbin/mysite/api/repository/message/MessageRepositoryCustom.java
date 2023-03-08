@@ -9,4 +9,5 @@ import java.util.Optional;
 public interface MessageRepositoryCustom {
 
     List<Message> findAllWithFrom(SearchOption searchOption, Long from);
+    List<Message> findAllWithTo(SearchOption searchOption, Long to);
 }

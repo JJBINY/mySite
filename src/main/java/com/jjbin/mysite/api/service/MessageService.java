@@ -24,9 +24,9 @@ public class MessageService {
     private final MessageRepository messageRepository;
     private final MemberRepository memberRepository;
     @Transactional
-    public Long Write(MessageCreate messageCreate, Member member) {
+    public Long Write(MessageCreate messageCreate, Member from) {
         Member to = memberRepository.findByLoginId(messageCreate.getToLoginId()).orElseThrow(ObjectNotFound::new);
-        Message message = Message.createMessage(member,to,messageCreate.getContent());
+        Message message = Message.createMessage(from ,to,messageCreate.getContent());
         Message save = messageRepository.save(message);
         return save.getId();
     }
@@ -39,8 +39,6 @@ public class MessageService {
 
         messageRepository.delete(message);
     }
-
-    // TODO 검색옵션
     public List<Message> findFromList(SearchOption searchOption, Long memberId){
         if(searchOption.getSize() == null){
             searchOption.setSize(10);
@@ -50,6 +48,16 @@ public class MessageService {
         }
         return messageRepository
                 .findAllWithFrom(searchOption, memberId);
+    }
+    public List<Message> findToList(SearchOption searchOption, Long memberId){
+        if(searchOption.getSize() == null){
+            searchOption.setSize(10);
+        }
+        if(searchOption.getPage() == null){
+            searchOption.setPage(0);
+        }
+        return messageRepository
+                .findAllWithTo(searchOption, memberId);
     }
 
     public Message findOne(Long id) {

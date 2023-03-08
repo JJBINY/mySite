@@ -34,10 +34,17 @@ public class MessageController {
     }
 
 
-    @GetMapping("/message/list")
-    public List<MessageResponse> messageList(@ModelAttribute SearchOption searchOption, HttpServletRequest request) {
+    @GetMapping("/message/fromList")
+    public List<MessageResponse> messageFromList(@ModelAttribute SearchOption searchOption, HttpServletRequest request) {
         Member member = (Member) request.getSession(false).getAttribute(LOGIN_MEMBER);
         return messageService.findFromList(searchOption,member.getId()).stream()
+                .map(MessageResponse::new)
+                .collect(Collectors.toList());
+    }
+    @GetMapping("/message/toList")
+    public List<MessageResponse> messageToList(@ModelAttribute SearchOption searchOption, HttpServletRequest request) {
+        Member member = (Member) request.getSession(false).getAttribute(LOGIN_MEMBER);
+        return messageService.findToList(searchOption,member.getId()).stream()
                 .map(MessageResponse::new)
                 .collect(Collectors.toList());
     }

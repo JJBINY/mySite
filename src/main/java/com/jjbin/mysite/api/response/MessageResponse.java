@@ -12,21 +12,21 @@ import java.time.LocalDateTime;
 public class MessageResponse {
 
     private Long id;
-    private String destination;
-    private String title;
     private String content;
-
+    private String toName;
+    private String fromName;
     private LocalDateTime createdAt;
     public MessageResponse(Message message) {
         this.id = message.getId();
+        this.fromName = message.getFrom().getName();
+        this.toName=message.getTo().getName();
         this.content = message.getContent();
         this.createdAt = message.getCreatedAt();
     }
 
     @Builder
-    public MessageResponse(Long id, String title, String content) {
+    public MessageResponse(Long id, String content) {
         this.id = id;
-        this.title = title;
         this.content = content;
     }
 }
