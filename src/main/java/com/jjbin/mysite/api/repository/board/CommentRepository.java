@@ -12,4 +12,10 @@ public interface CommentRepository extends JpaRepository<Comment,Long>, CommentR
 
     @Query("select c from Comment c join fetch c.member mb where c.id =:id")
     Optional<Comment> findOne(@Param("id") Long id);
+
+    @Query("select count(c.id) from Comment c where c.board.id=:boardId")
+    Long countComment(Long boardId);
+
+    @Query("select count(c.id) from Comment c where c.board.id=:boardId and c.parent.id=:parentId")
+    Long countReComment(Long boardId, Long parentId);
 }

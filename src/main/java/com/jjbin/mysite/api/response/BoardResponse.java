@@ -1,7 +1,6 @@
 package com.jjbin.mysite.api.response;
 
 import com.jjbin.mysite.api.domain.Board;
-import com.jjbin.mysite.api.domain.Mail;
 import lombok.*;
 
 import java.time.LocalDateTime;

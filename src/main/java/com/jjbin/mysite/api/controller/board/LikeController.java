@@ -20,9 +20,16 @@ public class LikeController {
     private final LikeService likeService;
 
     @PostMapping("/board/{boardId}/like")
-    public Map<String,Long> likeBoard(@PathVariable Long boardId, HttpServletRequest request) {
+    public Map<String,Long> postLikeBoard(@PathVariable Long boardId, HttpServletRequest request) {
         Member member = (Member) request.getSession(false).getAttribute(LOGIN_MEMBER);
         Long count = likeService.like(boardId, member);
+        return Map.of("count", count);
+    }
+
+    @GetMapping("/board/{boardId}/like")
+    public Map<String,Long> getLikeBoard(@PathVariable Long boardId) {
+
+        Long count = likeService.count(boardId);
         return Map.of("count", count);
     }
 }

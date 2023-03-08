@@ -6,11 +6,13 @@
 :toclevels: 2
 :sectlinks:
 
+
 = icon:회원[]
 == 회원가입
 === -요청
 include::{snippets}/member-join/http-request.adoc[]
 include::{snippets}/member-join/request-fields.adoc[]
+include::{snippets}/member-join/request-fields-beneath-address.adoc[]
 === -응답:성공
 include::{snippets}/member-join/http-response.adoc[]
 === -응답:실패
@@ -116,3 +118,12 @@ include::{snippets}/comment-delete/http-response.adoc[]
 === -응답:실패
 include::{snippets}/comment-delete-fail/http-response.adoc[]
 include::{snippets}/comment-delete-fail/response-fields.adoc[]
+
+= icon:좋아요[]
+== 좋아요 요청(인증필요)
+=== -요청
+include::{snippets}/like-board/http-request.adoc[]
+include::{snippets}/like-board/path-parameters.adoc[]
+=== -응답:성공
+include::{snippets}/like-board/http-response.adoc[]
+include::{snippets}/like-board/response-fields.adoc[]

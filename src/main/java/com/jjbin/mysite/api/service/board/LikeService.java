@@ -47,6 +47,10 @@ public class LikeService {
                             .build()
             );
         }
-        return likeRepository.countLike(boardId, member.getId());
+        return likeRepository.countLike(boardId);
+    }
+
+    public Long count(Long boardId) {
+        return likeRepository.countLike(boardId);
     }
 }

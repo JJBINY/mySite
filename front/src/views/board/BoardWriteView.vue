@@ -10,6 +10,7 @@ const title = ref("")
 const content = ref("")
 let member = ref({})
 
+//TODO 세션 유효성 프론트에서 확인하는 방법 찾아서 개선하기
 axios.get("/api/member")
     .then((response) =>{
       console.log("세션조회")
@@ -23,33 +24,22 @@ const write = function () {
   // console.log(title,content)
   // alert("저장완료")
   axios
-      .post("/api/message/create", {
+      .post("/api/board/write", {
         title: title.value,
         content: content.value,
       })
       .then(() => {
-        router.replace({name: "home"})
+        router.replace({name: "board"})
       });
-
 };
 
 const cancel = function (){
-  router.replace({name: "home"})
+  router.replace({name: "board"})
 }
 
 </script>
 
 <template>
-<!--  //TODO 뷰 구조 변경 필요-->
-  <div>
-    보내는 이
-<!--    <el-input v-model="sender" placeholder="" model-value = {member.id} />-->
-  </div>
-  <div>
-    받는 이
-    <el-input v-model="receiver" placeholder="받는 이"/>
-  </div>
-
   <div>
     <el-input v-model="title" placeholder="제목을 입력해주세요"/>
   </div>

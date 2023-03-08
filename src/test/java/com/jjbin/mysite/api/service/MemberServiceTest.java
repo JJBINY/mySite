@@ -1,5 +1,6 @@
 package com.jjbin.mysite.api.service;
 
+import com.jjbin.mysite.api.crypto.PasswordEncoder;
 import com.jjbin.mysite.api.domain.Address;
 import com.jjbin.mysite.api.domain.Member;
 import com.jjbin.mysite.api.exception.Conflicted;
@@ -41,18 +42,19 @@ class MemberServiceTest {
                 .build();
         long count = memberRepository.count();
 
+
         //when
         Long memberId = memberService.join(memberCreate);
         Member member = memberRepository.findById(memberId).get();
         //then
         assertThat(memberRepository.count()).isEqualTo(count + 1);
         assertThat(member.getLoginId()).isEqualTo("loginId");
-        assertThat(member.getPassword()).isEqualTo("password");
+        assertThat(member.getPassword()).isNotEqualTo("password");
         assertThat(member.getName()).isEqualTo("name");
         assertThat(member.getPhone()).isEqualTo("010-1234-1234");
-        assertThat(member.getAddress().getCity()).isEqualTo("seoul");
-        assertThat(member.getAddress().getStreet()).isEqualTo("gwangjin");
-        assertThat(member.getAddress().getZipcode()).isEqualTo("123");
+        assertThat(member.getAddress().getCountry()).isEqualTo("seoul");
+        assertThat(member.getAddress().getAddress()).isEqualTo("gwangjin");
+        assertThat(member.getAddress().getDetail()).isEqualTo("123");
     }
 
     @Test
@@ -66,8 +68,11 @@ class MemberServiceTest {
                 .phone("010-1234-1234")
                 .address(new Address("seoul", "gwangjin", "123"))
                 .build();
-        long count = memberRepository.count();
-        memberService.join(memberCreate);
+        PasswordEncoder encoder = new PasswordEncoder();
+        String encodedPw= encoder.encode(memberCreate.getPassword());
+        memberCreate.setPassword(encodedPw);
+        Member member = Member.createMember(memberCreate);
+        Member save = memberRepository.save(member);
 
         //expected
         assertThatThrownBy(() -> memberService.join(memberCreate))
@@ -86,8 +91,11 @@ class MemberServiceTest {
                 .phone("010-1234-1234")
                 .address(new Address("seoul", "gwangjin", "123"))
                 .build();
-
-        memberService.join(memberCreate);
+        PasswordEncoder encoder = new PasswordEncoder();
+        String encodedPw= encoder.encode(memberCreate.getPassword());
+        memberCreate.setPassword(encodedPw);
+        Member member = Member.createMember(memberCreate);
+        Member save = memberRepository.save(member);
 
         //when
         Member loginMember = memberService.login("loginId", "1234");
@@ -95,7 +103,7 @@ class MemberServiceTest {
         //then
         assertThat(loginMember).isNotNull();
         assertThat(loginMember.getLoginId()).isEqualTo("loginId");
-        assertThat(loginMember.getPassword()).isEqualTo("1234");
+        assertThat(loginMember.getPassword()).isNotEqualTo("1234");
     }
     @Test
     @DisplayName("회원 로그인 - 잘못된 아이디 요청")
@@ -156,12 +164,12 @@ class MemberServiceTest {
 
         //then
         assertThat(member.getLoginId()).isEqualTo("loginId");
-        assertThat(member.getPassword()).isEqualTo("password");
+        assertThat(member.getPassword()).isNotEqualTo("password");
         assertThat(member.getName()).isEqualTo("name");
         assertThat(member.getPhone()).isEqualTo("010-1234-1234");
-        assertThat(member.getAddress().getCity()).isEqualTo("seoul");
-        assertThat(member.getAddress().getStreet()).isEqualTo("gwangjin");
-        assertThat(member.getAddress().getZipcode()).isEqualTo("123");
+        assertThat(member.getAddress().getCountry()).isEqualTo("seoul");
+        assertThat(member.getAddress().getAddress()).isEqualTo("gwangjin");
+        assertThat(member.getAddress().getDetail()).isEqualTo("123");
     }
 
     @Test

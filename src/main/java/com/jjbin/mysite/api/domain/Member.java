@@ -28,8 +28,11 @@ public class Member {
     @Embedded
     private Address address;
 
-    @OneToMany(mappedBy = "member", cascade = CascadeType.ALL)
-    private List<Mail> mails = new ArrayList<>();
+    @OneToMany(mappedBy = "from", cascade = CascadeType.ALL)
+    private List<Message> sendMessages = new ArrayList<>();
+
+    @OneToMany(mappedBy = "to", cascade = CascadeType.ALL)
+    private List<Message> rcvMessages = new ArrayList<>();
 
     @OneToMany(mappedBy = "member", cascade = CascadeType.ALL)
     private List<Board> boards = new ArrayList<>();

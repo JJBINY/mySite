@@ -1,6 +1,6 @@
 ### 메일 작성 요청
 
-POST http://localhost:8080/mail/create
+POST http://localhost:8080/message/create
 Content-Type: application/json
 #Authorization:
 

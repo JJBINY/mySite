@@ -11,11 +11,15 @@ const login = function () {
         loginId: form.loginId,
         password: form.password,
       })
-      .then(() => {
+      .then((response) => {
+        // console.log(response)
         //TODO 로그인 성공 or 실패 분기별 로직작성
         router.replace({name: "home"})
-      });
-
+      })
+      .catch((error)=> {
+        console.log(error)
+        alert(error.response.data.message)
+      })
 };
 
 import { reactive } from 'vue'

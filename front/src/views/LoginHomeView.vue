@@ -38,7 +38,7 @@ const form = reactive({
     </template>
     <div v-for="o in 4" :key="o" class="text item">{{ 'List item ' + o }}</div>
     <div class="content">
-<!--      {{ mail.content.substring(0,100) }}...-->
+<!--      {{ message.content.substring(0,100) }}...-->
       회원정보들..
     </div>
   </el-card>

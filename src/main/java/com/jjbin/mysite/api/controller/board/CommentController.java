@@ -15,6 +15,7 @@ import org.springframework.web.bind.annotation.*;
 import javax.servlet.http.HttpServletRequest;
 import javax.validation.Valid;
 import java.util.List;
+import java.util.Map;
 import java.util.stream.Collectors;
 
 import static com.jjbin.mysite.api.SessionConst.LOGIN_MEMBER;
@@ -64,6 +65,15 @@ public class CommentController {
         return commentService.findChildList(commentId, searchOption).stream()
                 .map(CommentResponse::new)
                 .collect(Collectors.toList());
+    }
+
+    @GetMapping("/board/{boardId}/comment/count")
+    public Map<String,Long> getCommentCount(@PathVariable Long boardId) {
+        return Map.of("count",commentService.countComment(boardId));
+    }
+    @GetMapping("/board/{boardId}/comment/{commentId}/count")
+    public Map<String,Long> getCommentCount(@PathVariable Long boardId, @PathVariable Long commentId) {
+        return Map.of("count", commentService.countChildrenComment(boardId, commentId));
     }
 
 }

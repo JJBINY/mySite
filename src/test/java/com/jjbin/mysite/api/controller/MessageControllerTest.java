@@ -2,11 +2,11 @@ package com.jjbin.mysite.api.controller;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.jjbin.mysite.api.SessionConst;
-import com.jjbin.mysite.api.domain.Mail;
+import com.jjbin.mysite.api.domain.Message;
 import com.jjbin.mysite.api.domain.Member;
-import com.jjbin.mysite.api.repository.mail.MailRepository;
+import com.jjbin.mysite.api.repository.message.MessageRepository;
 import com.jjbin.mysite.api.repository.MemberRepository;
-import com.jjbin.mysite.api.request.create.MailCreate;
+import com.jjbin.mysite.api.request.create.MessageCreate;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
@@ -31,33 +31,38 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 
 @SpringBootTest
 @AutoConfigureMockMvc
-class MailControllerTest {
+class MessageControllerTest {
 
     @Autowired
     private MockMvc mockMvc;
     @Autowired
     private ObjectMapper objectMapper;
     @Autowired
-    private MailRepository mailRepository;
+    private MessageRepository messageRepository;
     @Autowired
     private MemberRepository memberRepository;
 
     @BeforeEach
     void beforeEach(){
-        mailRepository.deleteAll();
+        messageRepository.deleteAll();
         memberRepository.deleteAll();
     }
 
     @Test
-    @DisplayName("메일작성 요청 - DB에 값이 저장된다")
+    @DisplayName("메세지작성 요청 - DB에 값이 저장된다")
     void test1() throws Exception {
         //given
-        MailCreate request = MailCreate.builder()
-                .destination("수신자")
-                .title("제목")
+        MessageCreate request = MessageCreate.builder()
+                .toLoginId("toLoginId")
                 .content("내용")
                 .build();
 
+        memberRepository.save(Member.builder()
+                .loginId("toLoginId")
+                .password("1234")
+                .name("to")
+                .build()
+        );
         Member member = memberRepository.save(Member.builder()
                 .loginId("loginId")
                 .password("1234")
@@ -79,18 +84,14 @@ class MailControllerTest {
                 .andDo(print());
 
         //then
-        Mail mail = mailRepository.findAll().get(0);
-        assertThat(mail.getDestination()).isEqualTo("수신자");
-        assertThat(mail.getTitle()).isEqualTo("제목");
-        assertThat(mail.getContent()).isEqualTo("내용");
+        Message message = messageRepository.findAll().get(0);
+        assertThat(message.getContent()).isEqualTo("내용");
     }
     @Test
-    @DisplayName("메일작성 요청:실패 - destination값 필수")
+    @DisplayName("메세지작성 요청:실패 - destination값 필수")
     void test1_2() throws Exception {
         //given
-        MailCreate request = MailCreate.builder()
-//                .destination("수신자")
-                .title("제목")
+        MessageCreate request = MessageCreate.builder()
                 .content("내용")
                 .build();
 
@@ -117,10 +118,10 @@ class MailControllerTest {
                 .andDo(print());
     }
     @Test
-    @DisplayName("메일작성 요청:실패 - title값 필수")
+    @DisplayName("메세지작성 요청:실패 - title값 필수")
     void test1_3() throws Exception {
         //given
-        MailCreate request = MailCreate.builder()
+        MessageCreate request = MessageCreate.builder()
                 .destination("수신자")
 //                .title("제목")
                 .content("내용")
@@ -149,10 +150,10 @@ class MailControllerTest {
                 .andDo(print());
     }
     @Test
-    @DisplayName("메일작성 요청:실패 - 인증되지 않은 요청")
+    @DisplayName("메세지작성 요청:실패 - 인증되지 않은 요청")
     void test1_4() throws Exception {
         //given
-        MailCreate request = MailCreate.builder()
+        MessageCreate request = MessageCreate.builder()
                 .destination("수신자")
                 .title("제목")
                 .content("내용")
@@ -172,7 +173,7 @@ class MailControllerTest {
     }
 
     @Test
-    @DisplayName("메일 조회 요청")
+    @DisplayName("메세지 조회 요청")
     void test2() throws Exception {
         // given
         Member member = memberRepository.save(Member.builder()
@@ -182,7 +183,7 @@ class MailControllerTest {
                 .build()
         );
 
-        Mail save = mailRepository.save(Mail.builder()
+        Message save = messageRepository.save(Message.builder()
                 .member(member)
                 .destination("수신자")
                 .title("제목")
@@ -203,7 +204,7 @@ class MailControllerTest {
                 .andDo(print());
     }
     @Test
-    @DisplayName("메일 조회 요청:실패 - 인증되지 않은 요청")
+    @DisplayName("메세지 조회 요청:실패 - 인증되지 않은 요청")
     void test2_2() throws Exception {
         // given
         Member member = memberRepository.save(Member.builder()
@@ -213,7 +214,7 @@ class MailControllerTest {
                 .build()
         );
 
-        Mail save = mailRepository.save(Mail.builder()
+        Message save = messageRepository.save(Message.builder()
                 .member(member)
                 .destination("수신자")
                 .title("제목")
@@ -230,7 +231,7 @@ class MailControllerTest {
     }
 
     @Test
-    @DisplayName("메일 삭제 요청 - DB에서 값이 삭제된다.")
+    @DisplayName("메세지 삭제 요청 - DB에서 값이 삭제된다.")
     void test3() throws Exception {
         // given
         Member member = memberRepository.save(Member.builder()
@@ -240,7 +241,7 @@ class MailControllerTest {
                 .build()
         );
 
-        Mail save = mailRepository.save(Mail.builder()
+        Message save = messageRepository.save(Message.builder()
                 .member(member)
                 .destination("수신자")
                 .title("제목")
@@ -257,11 +258,11 @@ class MailControllerTest {
                 .andDo(print());
 
         // then
-        Mail mail = mailRepository.findById(save.getId()).orElse(null);
-        assertThat(mail).isNull();
+        Message message = messageRepository.findById(save.getId()).orElse(null);
+        assertThat(message).isNull();
     }
     @Test
-    @DisplayName("메일 삭제 요청:실패 - 인증되지 않은 요청")
+    @DisplayName("메세지 삭제 요청:실패 - 인증되지 않은 요청")
     void test3_2() throws Exception {
         // given
         Member member = memberRepository.save(Member.builder()
@@ -271,7 +272,7 @@ class MailControllerTest {
                 .build()
         );
 
-        Mail save = mailRepository.save(Mail.builder()
+        Message save = messageRepository.save(Message.builder()
                 .member(member)
                 .destination("수신자")
                 .title("제목")
@@ -289,7 +290,7 @@ class MailControllerTest {
     }
 
     @Test
-    @DisplayName("메일 삭제 요청:실패 - 존재하지 않는 메일")
+    @DisplayName("메세지 삭제 요청:실패 - 존재하지 않는 메세지")
     void test3_3() throws Exception {
         // given
         Member member = memberRepository.save(Member.builder()
@@ -312,7 +313,7 @@ class MailControllerTest {
     }
 
     @Test
-    @DisplayName("메일 여러개 조회 요청 - 파라미터를 넘기지 않으면 디폴트 값이 할당된다.")
+    @DisplayName("메세지 여러개 조회 요청 - 파라미터를 넘기지 않으면 디폴트 값이 할당된다.")
     void test4() throws Exception {
         // given
         Member member = memberRepository.save(Member.builder()
@@ -322,15 +323,15 @@ class MailControllerTest {
                 .build()
         );
 
-        List<Mail> mails = IntStream.range(0, 20)
-                .mapToObj(i -> Mail.builder()
+        List<Message> messages = IntStream.range(0, 20)
+                .mapToObj(i -> Message.builder()
                         .destination("수신자" + i)
                         .title("제목" + i)
                         .content("내용" + i)
                         .member(member)
                         .build())
                 .collect(Collectors.toList());
-        mailRepository.saveAll(mails);
+        messageRepository.saveAll(messages);
 
         MockHttpSession session = new MockHttpSession();
         session.setAttribute(SessionConst.LOGIN_MEMBER,member);
@@ -347,7 +348,7 @@ class MailControllerTest {
     }
 
     @Test
-    @DisplayName("메일 여러개 조회 요청 - page=0또는1 을 요청하면 첫 번째 페이지를 가져온다.")
+    @DisplayName("메세지 여러개 조회 요청 - page=0또는1 을 요청하면 첫 번째 페이지를 가져온다.")
     void test4_2() throws Exception {
         // given
         Member member = memberRepository.save(Member.builder()
@@ -357,15 +358,15 @@ class MailControllerTest {
                 .build()
         );
 
-        List<Mail> mails = IntStream.range(0, 20)
-                .mapToObj(i -> Mail.builder()
+        List<Message> messages = IntStream.range(0, 20)
+                .mapToObj(i -> Message.builder()
                         .destination("수신자" + i)
                         .title("제목" + i)
                         .content("내용" + i)
                         .member(member)
                         .build())
                 .collect(Collectors.toList());
-        mailRepository.saveAll(mails);
+        messageRepository.saveAll(messages);
 
         MockHttpSession session = new MockHttpSession();
         session.setAttribute(SessionConst.LOGIN_MEMBER, member);
@@ -390,7 +391,7 @@ class MailControllerTest {
                 .andDo(print());
     }
     @Test
-    @DisplayName("메일 여러개 조회 요청 - page=2을 요청하면 두 번째 페이지를 가져온다.")
+    @DisplayName("메세지 여러개 조회 요청 - page=2을 요청하면 두 번째 페이지를 가져온다.")
     void test4_3() throws Exception {
         // given
         Member member = memberRepository.save(Member.builder()
@@ -400,15 +401,15 @@ class MailControllerTest {
                 .build()
         );
 
-        List<Mail> mails = IntStream.range(0, 20)
-                .mapToObj(i -> Mail.builder()
+        List<Message> messages = IntStream.range(0, 20)
+                .mapToObj(i -> Message.builder()
                         .destination("수신자" + i)
                         .title("제목" + i)
                         .content("내용" + i)
                         .member(member)
                         .build())
                 .collect(Collectors.toList());
-        mailRepository.saveAll(mails);
+        messageRepository.saveAll(messages);
 
         MockHttpSession session = new MockHttpSession();
         session.setAttribute(SessionConst.LOGIN_MEMBER, member);
@@ -424,7 +425,7 @@ class MailControllerTest {
                 .andDo(print());
     }
     @Test
-    @DisplayName("메일 여러개 조회 요청 - size 개수만큼 조회한다.")
+    @DisplayName("메세지 여러개 조회 요청 - size 개수만큼 조회한다.")
     void test4_4() throws Exception {
         // given
         Member member = memberRepository.save(Member.builder()
@@ -434,15 +435,15 @@ class MailControllerTest {
                 .build()
         );
 
-        List<Mail> mails = IntStream.range(0, 20)
-                .mapToObj(i -> Mail.builder()
+        List<Message> messages = IntStream.range(0, 20)
+                .mapToObj(i -> Message.builder()
                         .destination("수신자" + i)
                         .title("제목" + i)
                         .content("내용" + i)
                         .member(member)
                         .build())
                 .collect(Collectors.toList());
-        mailRepository.saveAll(mails);
+        messageRepository.saveAll(messages);
 
         MockHttpSession session = new MockHttpSession();
         session.setAttribute(SessionConst.LOGIN_MEMBER, member);

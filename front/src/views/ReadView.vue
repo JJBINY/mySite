@@ -12,7 +12,7 @@ const props = defineProps({
 });
 
 //초기화방식개선필요
-const mail = ref({
+const message = ref({
   id: 0,
   title: "",
   content: "",
@@ -22,20 +22,20 @@ const mail = ref({
 
 // api요청방식 개선필요
 onMounted(() => {
-  axios.get("/api/mail/"+props.mailId).then((response) => {
+  axios.get("/api/message/"+props.mailId).then((response) => {
     // console.log(response)
-    mail.value = response.data;
+    message.value = response.data;
     });
 
 });
 
 </script>
 <template>
-  <h2 class="title">{{mail.title}}</h2>
+  <h2 class="title">{{message.title}}</h2>
   <div class="sub d-flex">
     <div class="regDate">생성일 2023-01-20</div>
   </div>
-  <div class="content">{{mail.content}}</div>
+  <div class="content">{{message.content}}</div>
 
 </template>
 

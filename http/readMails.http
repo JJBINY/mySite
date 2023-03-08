@@ -1,4 +1,4 @@
 ### 메일 리스트 요청
 
-GET http://localhost:8080/mail/list
+GET http://localhost:8080/message/list
 Content-Type: application/json

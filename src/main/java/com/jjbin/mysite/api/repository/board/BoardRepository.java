@@ -14,4 +14,6 @@ public interface BoardRepository extends JpaRepository<Board, Long>, BoardReposi
     @Query("select b from Board b join fetch b.member mb where b.id =:id")
     Optional<Board> findOne(@Param("id") Long id);
 
+    @Query("select count(b.id) from Board b")
+    Long countBoard();
 }

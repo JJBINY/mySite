@@ -2,13 +2,15 @@ import { createRouter, createWebHistory } from "vue-router";
 import HomeView from "../views/HomeView.vue";
 import LoginHomeView from "../views/LoginHomeView.vue";
 import WriteView from "../views/WriteView.vue";
-// @ts-ignore
 import ReadView from "../views/ReadView.vue";
-import JoinView from "../views/JoinView.vue";
-import LoginView from "../views/LoginView.vue";
-import MemberInfoView from "../views/MemberInfoView.vue";
-import MembersView from "../views/MembersView.vue";
-import MemberMailsView from "../views/MemberMailsView.vue";
+import JoinView from "../views/member/JoinView.vue";
+import LoginView from "../views/member/LoginView.vue";
+import MemberInfoView from "../views/member/MemberInfoView.vue";
+import MembersView from "../views/member/MembersView.vue";
+import MemberMailsView from "../views/member/MemberMailsView.vue";
+import BoardView from "../views/board/BoardView.vue";
+import BoardWriteView from "../views/board/BoardWriteView.vue";
+import BoardReadView from "../views/board/BoardReadView.vue";
 
 const router = createRouter({
   history: createWebHistory(import.meta.env.BASE_URL),
@@ -62,6 +64,24 @@ const router = createRouter({
       path: "/members",
       name: "members",
       component: MembersView,
+      props: true,
+    },
+    {
+      path: "/board",
+      name: "board",
+      component: BoardView,
+      props: true,
+    },
+    {
+      path: "/boardWrite",
+      name: "boardWrite",
+      component: BoardWriteView,
+      props: true,
+    },
+    {
+      path: "/boardRead:boardId",
+      name: "boardRead",
+      component: BoardReadView,
       props: true,
     },
     // {

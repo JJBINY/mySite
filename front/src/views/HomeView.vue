@@ -30,8 +30,9 @@ const login = function () {
         //TODO 로그인 성공 or 실패 분기별 로직작성
         router.replace({name: "loginHome"});
       })
-      .catch((r) => {
-        console.log(r.status)
+      .catch((error)=> {
+        console.log(error)
+        alert(error.response.data.message)
       })
   ;
 

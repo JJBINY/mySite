@@ -11,11 +11,11 @@ const props = defineProps({
 });
 
 const router = useRouter();
-const mails = ref([]);
+const messages = ref([]);
 
-axios.get("/api/member/"+props.memberId+"/mail/list").then((response) => {
+axios.get("/api/member/"+props.memberId+"/message/list").then((response) => {
   response.data.forEach((r: any) => {
-    mails.value.push(r);
+    messages.value.push(r);
   })
 });
 
@@ -27,20 +27,20 @@ const moveToRead = () => {
 
 <template>
   <ul>
-    <li v-for="mail in mails" :key="mail.id">
+    <li v-for="message in messages" :key="message.id">
 
       <div class="title">
-        <router-link :to="{ name: 'read', params: {mailId: mail.id}}">
-          {{ mail.title }}
+        <router-link :to="{ name: 'read', params: {mailId: message.id}}">
+          {{ message.title }}
         </router-link>
 
       </div>
       <div class="content">
-        {{ mail.content.substring(0,100) }}...
+        {{ message.content.substring(0,100) }}...
       </div>
 
       <div class="sub d-flex">
-        <div class="regDate">2023-01-20{{mail.date}}</div>
+        <div class="regDate">2023-01-20{{message.date}}</div>
       </div>
 
     </li>

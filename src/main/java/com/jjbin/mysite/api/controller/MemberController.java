@@ -85,10 +85,10 @@ public class MemberController {
         Member loginMember = memberService.login(form.getLoginId(), form.getPassword());
         log.info("login? {}",loginMember);
 
-        if (loginMember == null){
-            log.info("로그인 실패");
-            throw new ObjectNotFound("아이디 또는 비밀번호가 맞지 않습니다.");
-        }
+//        if (loginMember == null){
+//            log.info("로그인 실패");
+//            throw new ObjectNotFound("아이디 또는 비밀번호가 맞지 않습니다.");
+//        }
         log.info("로그인 성공");
         //로그인 성공 처리
         //세션 반환, 없으면 신규 세션 생성

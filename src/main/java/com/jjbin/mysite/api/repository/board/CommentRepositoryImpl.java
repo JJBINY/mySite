@@ -20,13 +20,12 @@ public class CommentRepositoryImpl implements CommentRepositoryCustom {
 
         return em.createQuery("select c from Comment c" +
                         " join fetch c.member mb" +
-                        " where c.board.id=:boardId" +
+                        " where c.board.id=:boardId and c.parent.id is null" +
                         " order by c.id desc", Comment.class)
                 .setParameter("boardId", boardId)
                 .setFirstResult(searchOption.getOffset())
                 .setMaxResults(searchOption.getSize())
                 .getResultList();
-
     }
     @Override
     public List<Comment> findAllWithMember(Long memberId, SearchOption searchOption) {
