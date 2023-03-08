@@ -1,10 +1,10 @@
 package com.jjbin.mysite.api.controller;
 
 import com.jjbin.mysite.api.domain.Member;
-import com.jjbin.mysite.api.request.create.MailCreate;
+import com.jjbin.mysite.api.request.create.MessageCreate;
 import com.jjbin.mysite.api.request.SearchOption;
-import com.jjbin.mysite.api.response.MailResponse;
-import com.jjbin.mysite.api.service.MailService;
+import com.jjbin.mysite.api.response.MessageResponse;
+import com.jjbin.mysite.api.service.MessageService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.web.bind.annotation.*;
@@ -19,37 +19,37 @@ import static com.jjbin.mysite.api.SessionConst.LOGIN_MEMBER;
 @Slf4j
 @RestController
 @RequiredArgsConstructor
-public class MailController {
+public class MessageController {
 
-    private final MailService mailService;
+    private final MessageService messageService;
 
 
-    @PostMapping("/mail/create")
-    public void sendMail(@RequestBody @Valid MailCreate mailCreate, HttpServletRequest request) {
+    @PostMapping("/message/create")
+    public void sendMessage(@RequestBody @Valid MessageCreate messageCreate, HttpServletRequest request) {
 
-        mailCreate.validate();
+        messageCreate.validate();
         Member member = (Member) request.getSession().getAttribute(LOGIN_MEMBER);
 
-        mailService.write(mailCreate,member);
+        messageService.Write(messageCreate,member);
     }
 
 
-    @GetMapping("/mail/list")
-    public List<MailResponse> mailList(@ModelAttribute SearchOption searchOption, HttpServletRequest request) {
+    @GetMapping("/message/list")
+    public List<MessageResponse> messageList(@ModelAttribute SearchOption searchOption, HttpServletRequest request) {
         Member member = (Member) request.getSession(false).getAttribute(LOGIN_MEMBER);
-        return mailService.findList(searchOption,member.getId()).stream()
-                .map(MailResponse::new)
+        return messageService.findFromList(searchOption,member.getId()).stream()
+                .map(MessageResponse::new)
                 .collect(Collectors.toList());
     }
 
-    @GetMapping("/mail/{mailId}")
-    public MailResponse findMail(@PathVariable Long mailId,HttpServletRequest request){
-        Member member = (Member) request.getSession(false).getAttribute(LOGIN_MEMBER);
-        return new MailResponse(mailService.findOne(mailId, member.getId()));
+    @GetMapping("/message/{mailId}")
+    public MessageResponse findMessage(@PathVariable Long mailId, HttpServletRequest request){
+//        Member member = (Member) request.getSession(false).getAttribute(LOGIN_MEMBER);
+        return new MessageResponse(messageService.findOne(mailId));
     }
 
-    @DeleteMapping("/mail/{mailId}")
-    public void deleteMail(@PathVariable Long mailId){
-        mailService.delete(mailId);
+    @DeleteMapping("/message/{mailId}")
+    public void deleteMessage(@PathVariable Long mailId){
+        messageService.delete(mailId);
     }
 }

@@ -23,7 +23,7 @@ const write = function () {
   // console.log(title,content)
   // alert("저장완료")
   axios
-      .post("/api/mail/create", {
+      .post("/api/message/create", {
         title: title.value,
         content: content.value,
       })

@@ -1,13 +1,12 @@
-package com.jjbin.mysite.api.repository.mail;
+package com.jjbin.mysite.api.repository.message;
 
-import com.jjbin.mysite.api.domain.Mail;
+import com.jjbin.mysite.api.domain.Message;
 import com.jjbin.mysite.api.request.SearchOption;
 
 import java.util.List;
 import java.util.Optional;
 
-public interface MailRepositoryCustom {
+public interface MessageRepositoryCustom {
 
-    List<Mail> findAllWithMember(SearchOption searchOption, Long memberId);
-    Optional<Mail> findOneWithMember(Long mailId, Long memberId);
+    List<Message> findAllWithFrom(SearchOption searchOption, Long from);
 }

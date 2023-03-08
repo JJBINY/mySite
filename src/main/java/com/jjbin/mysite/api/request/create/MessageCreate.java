@@ -1,6 +1,5 @@
 package com.jjbin.mysite.api.request.create;
 
-import com.jjbin.mysite.api.exception.InvalidRequest;
 import lombok.*;
 
 import javax.persistence.Lob;
@@ -10,23 +9,17 @@ import javax.validation.constraints.NotBlank;
 @Getter @Setter
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 @EqualsAndHashCode
-public class MailCreate {
+public class MessageCreate {
 
-    @NotBlank(message = "목적지 주소를 입력해주세요.")
-    private String destination;
-
-    @NotBlank(message = "제목을 입력해주세요.")
-    private String title;
-
-    @Lob
+    @NotBlank(message = "전송할 대상을 입력해주세요.")
+    private String toLoginId;
+    @NotBlank(message = "내용을 입력해주세요.")
     private String content;
 
     @Builder
-    public MailCreate(String destination, String title, String content) {
-        this.destination = destination;
-        this.title = title;
+    public MessageCreate(String toLoginId, String content) {
+        this.toLoginId = toLoginId;
         this.content = content;
-
     }
 
     public void validate() {

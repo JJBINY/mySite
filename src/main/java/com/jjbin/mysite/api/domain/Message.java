@@ -1,6 +1,6 @@
 package com.jjbin.mysite.api.domain;
 
-import com.jjbin.mysite.api.request.create.MailCreate;
+import com.jjbin.mysite.api.request.create.MessageCreate;
 import lombok.*;
 
 import javax.persistence.*;
@@ -10,45 +10,46 @@ import java.time.LocalDateTime;
 @Getter
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 @EqualsAndHashCode
-public class Mail {
+public class Message {
 
     @Id @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "mail_id")
     private Long id;
 
+
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "member_id")
-    private Member member;
+    private Member from;
 
-    private String destination;
-
-    private String title;
-
-    @Lob
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "member_id")
+    private Member to;
     private String content;
-
-
     private LocalDateTime createdAt;
+    private boolean isRead;
 
 
     @Builder
-    public Mail(Member member, String destination, String title, String content) {
-        this.title = title;
+    public Message(Member from, Member to, String content) {
+        this.from = from;
+        this.to = to;
         this.content = content;
-        this.member = member;
-        this.destination = destination;
         createdAt = LocalDateTime.now();
+        isRead=false;
     }
 
     //==생성 메서드==//
-    public static Mail createMail(MailCreate mailCreate, Member member){
-        Mail mail = Mail.builder()
-                .member(member)
-                .destination(mailCreate.getDestination())
-                .title(mailCreate.getTitle())
-                .content(mailCreate.getContent())
+    public static Message createMessage(Member from, Member to,String content){
+        Message message = Message.builder()
+                .from(from)
+                .to(to)
+                .content(content)
                 .build();
 
-        return mail;
+        return message;
+    }
+
+    public boolean isRead(){
+        return isRead;
     }
 }
