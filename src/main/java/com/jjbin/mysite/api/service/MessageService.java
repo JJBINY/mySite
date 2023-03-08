@@ -1,10 +1,10 @@
 package com.jjbin.mysite.api.service;
 
-import com.jjbin.mysite.api.domain.Mail;
+import com.jjbin.mysite.api.domain.Message;
 import com.jjbin.mysite.api.domain.Member;
 import com.jjbin.mysite.api.exception.ObjectNotFound;
-import com.jjbin.mysite.api.repository.mail.MailRepository;
-import com.jjbin.mysite.api.request.create.MailCreate;
+import com.jjbin.mysite.api.repository.message.MessageRepository;
+import com.jjbin.mysite.api.request.create.MessageCreate;
 import com.jjbin.mysite.api.request.SearchOption;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -26,12 +26,12 @@ import java.util.List;
 @Transactional(readOnly = true)
 public class MailService {
 
-    private final MailRepository mailRepository;
+    private final MessageRepository messageRepository;
 
     @Transactional
-    public Long write(MailCreate mailCreate, Member member) {
-        Mail mail = Mail.createMail(mailCreate, member);
-        Mail save = mailRepository.save(mail);
+    public Long write(MessageCreate messageCreate, Member member) {
+        Message message = Message.createMessage(messageCreate, member);
+        Message save = messageRepository.save(message);
         //TODO send
         return save.getId();
     }
@@ -40,7 +40,7 @@ public class MailService {
      * TODO smtp 서버 구축 필요
      *
      */
-    public void send(Mail mail){
+    public void send(Message mail){
         JavaMailSenderImpl sender = new JavaMailSenderImpl();
 //        sender.setHost("smtp.gmail.com");
 //        sender.setPort(587);
@@ -71,27 +71,27 @@ public class MailService {
 
     @Transactional
     public void delete(Long id){
-        Mail mail = mailRepository.findById(id)
+        Message message = messageRepository.findById(id)
                 .orElseThrow(ObjectNotFound::new);
 
-        mailRepository.delete(mail);
+        messageRepository.delete(message);
     }
 
     // TODO 검색옵션
-    public List<Mail> findList(SearchOption searchOption, Long memberId){
+    public List<Message> findList(SearchOption searchOption, Long memberId){
         if(searchOption.getSize() == null){
             searchOption.setSize(10);
         }
         if(searchOption.getPage() == null){
             searchOption.setPage(0);
         }
-        return mailRepository
+        return messageRepository
                 .findAllWithMember(searchOption, memberId);
     }
 
-    public Mail findOne(Long id, Long memberId) {
+    public Message findOne(Long id, Long memberId) {
 
-        return mailRepository.findOneWithMember(id,memberId)
+        return messageRepository.findOneWithMember(id,memberId)
                 .orElseThrow(ObjectNotFound::new);
 
     }
