@@ -26,19 +26,17 @@ public class MessageService {
     @Transactional
     public Long Write(MessageCreate messageCreate, Member from) {
         Member to = memberRepository.findByLoginId(messageCreate.getToLoginId()).orElseThrow(ObjectNotFound::new);
+        //TODO 메세지 내용 검열(ex 욕설)
         Message message = Message.createMessage(from ,to,messageCreate.getContent());
         Message save = messageRepository.save(message);
         return save.getId();
     }
 
-
-    @Transactional
-    public void delete(Long id){
-        Message message = messageRepository.findById(id)
+    public Message findOne(Long id) {
+        return messageRepository.findById(id)
                 .orElseThrow(ObjectNotFound::new);
-
-        messageRepository.delete(message);
     }
+
     public List<Message> findFromList(SearchOption searchOption, Long memberId){
         if(searchOption.getSize() == null){
             searchOption.setSize(10);
@@ -60,10 +58,14 @@ public class MessageService {
                 .findAllWithTo(searchOption, memberId);
     }
 
-    public Message findOne(Long id) {
-        return messageRepository.findById(id)
+
+    //TODO 삭제 보류
+    @Transactional
+    public void delete(Long id){
+        Message message = messageRepository.findById(id)
                 .orElseThrow(ObjectNotFound::new);
 
+        messageRepository.delete(message);
     }
 
 
