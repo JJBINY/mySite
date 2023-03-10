@@ -19,11 +19,25 @@ public class MessageRepositoryImpl implements MessageRepositoryCustom {
     public List<Message> findAllWithFrom(SearchOption searchOption, Long from) {
 
         return em.createQuery(
-                "select m from Message m" +
-                        " join fetch m.from f" +
-                        " where f.id=:id" +
-                        " order by m.id desc", Message.class)
+                        "select m from Message m" +
+                                " join fetch m.from f" +
+                                " where f.id=:id" +
+                                " order by m.id desc", Message.class)
                 .setParameter("id",from)
+                .setFirstResult(searchOption.getOffset())
+                .setMaxResults(searchOption.getSize())
+                .getResultList();
+
+    }
+    @Override
+    public List<Message> findAllWithTo(SearchOption searchOption, Long to) {
+
+        return em.createQuery(
+                        "select m from Message m" +
+                                " join fetch m.to t" +
+                                " where t.id=:id" +
+                                " order by m.id desc", Message.class)
+                .setParameter("id",to)
                 .setFirstResult(searchOption.getOffset())
                 .setMaxResults(searchOption.getSize())
                 .getResultList();

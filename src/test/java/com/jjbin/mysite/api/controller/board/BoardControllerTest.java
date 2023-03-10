@@ -137,18 +137,13 @@ class BoardControllerTest {
     @DisplayName("게시글 조회 요청")
     void test2() throws Exception {
         //given
-        BoardCreate req = getTestBoardCreate();
-        String json = objectMapper.writeValueAsString(req);
-
-        Board save = boardRepository.save(Board.createBoard(req, getTestMember()));
+        Board save = boardRepository.save(Board.createBoard(getTestBoardCreate(), getTestMember()));
         MockHttpSession session = new MockHttpSession();
         session.setAttribute(SessionConst.LOGIN_MEMBER, save.getMember());
 
         // expected
         mockMvc.perform(get("/board/watch/"+save.getId())
-                        .contentType(MediaType.APPLICATION_JSON)
-//                        .session(session)
-                        .content(json))
+                        .contentType(MediaType.APPLICATION_JSON))
                 .andExpect(status().isOk())
                 .andExpect(jsonPath("$.title").value("제목"))
                 .andExpect(jsonPath("$.content").value("내용"))
