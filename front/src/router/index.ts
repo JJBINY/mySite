@@ -1,15 +1,16 @@
 import { createRouter, createWebHistory } from "vue-router";
 import HomeView from "../views/HomeView.vue";
 import LoginHomeView from "../views/LoginHomeView.vue";
-import WriteView from "../views/WriteView.vue";
-import ReadView from "../views/ReadView.vue";
+import MessageWriteView from "../views/MessageWriteView.vue";
+import MessageReadView from "../views/MessageReadView.vue";
 import JoinView from "../views/member/JoinView.vue";
 import LoginView from "../views/member/LoginView.vue";
-import MemberInfoView from "../views/member/MemberInfoView.vue";
+import MemberEditView from "../views/member/MemberEditView.vue";
 import MembersView from "../views/member/MembersView.vue";
 import MemberMailsView from "../views/member/MemberMailsView.vue";
 import BoardView from "../views/board/BoardView.vue";
 import BoardWriteView from "../views/board/BoardWriteView.vue";
+import BoardEditView from "../views/board/BoardEditView.vue";
 import BoardReadView from "../views/board/BoardReadView.vue";
 
 const router = createRouter({
@@ -26,14 +27,15 @@ const router = createRouter({
       component: LoginHomeView,
     },
     {
-      path: "/write",
-      name: "write",
-      component: WriteView,
+      path: "/messageWrite:toLoginId",
+      name: "messageWrite",
+      component: MessageWriteView,
+      props: true,
     },
     {
-      path: "/read:mailId",
-      name: "read",
-      component: ReadView,
+      path: "/messageRead:messageId",
+      name: "messageRead",
+      component: MessageReadView,
       props: true,
     },
     {
@@ -55,9 +57,9 @@ const router = createRouter({
       props: true,
     },
     {
-      path: "/memberInfo",
-      name: "memberInfo",
-      component: MemberInfoView,
+      path: "/memberEdit",
+      name: "memberEdit",
+      component: MemberEditView,
       props: true,
     },
     {
@@ -76,6 +78,12 @@ const router = createRouter({
       path: "/boardWrite",
       name: "boardWrite",
       component: BoardWriteView,
+      props: true,
+    },
+    {
+      path: "/boardEdit:boardId",
+      name: "boardEdit",
+      component: BoardEditView,
       props: true,
     },
     {

@@ -18,6 +18,8 @@ const form = reactive({
   detail: '',
 })
 
+// const validation = ref("");
+
 const onSubmit = () => {
   console.log('submit!')
   console.log(form.name,form.loginId,form.password)
@@ -40,7 +42,9 @@ const onSubmit = () => {
       })
       .catch((error)=> {
         console.log(error)
-        alert(error.response.data.message)
+        const validation =Object.keys(error.response.data.validation)[0]
+        alert(error.response.data.validation[validation])
+
       })
   ;
 }
@@ -62,7 +66,7 @@ const onSubmit = () => {
       <el-col :span="6">
         <div class="grid-content ep-bg-purple-light"/>
         <el-form-item label="비밀번호">
-          <el-input v-model="form.password"/>
+          <el-input v-model="form.password" type="password"/>
         </el-form-item>
       </el-col>
     </el-row>

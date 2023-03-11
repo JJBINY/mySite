@@ -12,8 +12,6 @@ const login = function () {
         password: form.password,
       })
       .then((response) => {
-        // console.log(response)
-        //TODO 로그인 성공 or 실패 분기별 로직작성
         router.replace({name: "home"})
       })
       .catch((error)=> {
@@ -39,7 +37,7 @@ const form = reactive({
       <el-input v-model="form.loginId" placeholder="아이디" />
     </el-form-item>
     <el-form-item label="비밀번호">
-      <el-input v-model="form.password" placeholder="비밀번호" />
+      <el-input v-model="form.password" placeholder="비밀번호"  type="password"/>
     </el-form-item>
     <el-form-item>
       <el-button type="primary" @click="login()">로그인</el-button>

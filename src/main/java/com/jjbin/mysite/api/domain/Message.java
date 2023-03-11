@@ -13,16 +13,16 @@ import java.time.LocalDateTime;
 public class Message {
 
     @Id @GeneratedValue(strategy = GenerationType.IDENTITY)
-    @Column(name = "mail_id")
+    @Column(name = "message_id")
     private Long id;
 
 
     @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "member_id")
+    @JoinColumn(name = "from_id", referencedColumnName = "member_id")
     private Member from;
 
     @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "member_id")
+    @JoinColumn(name = "to_id", referencedColumnName = "member_id")
     private Member to;
     private String content;
     private LocalDateTime createdAt;

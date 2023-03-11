@@ -1,55 +1,60 @@
 <script setup lang="ts">
-import {ref} from "vue";
+import {defineProps, onMounted, ref} from "vue";
 import axios from "axios";
 import router from "@/router";
 
+const props = defineProps({
+  boardId: {
+    type: [Number, String],
+    require: true,
+  },
+});
 
-const sender = ref("")
-const receiver = ref("")
+
 const title = ref("")
 const content = ref("")
 let member = ref({})
 
+onMounted(() => {
+  axios.get("/api/board/watch/" + props.boardId).then((response) => {
+
+    const board = response.data;
+    title.value = board.title;
+    content.value = board.content;
+  });
+});
+//TODO 세션 유효성 프론트에서 확인하는 방법 찾아서 개선하기
 axios.get("/api/member")
     .then((response) =>{
       console.log("세션조회")
+      console.log(props.boardId)
       member.value = response.data;
     })
     .catch((c) => {
           router.push("login")
     });
 
-const write = function () {
-  // console.log(title,content)
-  // alert("저장완료")
+
+
+const update = function () {
+
   axios
-      .post("/api/message/create", {
+      .patch("/api/board/"+props.boardId, {
         title: title.value,
         content: content.value,
       })
       .then(() => {
-        router.replace({name: "home"})
+        router.push({name: "boardRead", params: {boardId:props.boardId}})
       });
-
 };
 
 const cancel = function (){
-  router.replace({name: "home"})
+  router.replace({name: "board"})
 }
 
 </script>
 
 <template>
-<!--  //TODO 뷰 구조 변경 필요-->
-  <div>
-    보내는 이
-<!--    <el-input v-model="sender" placeholder="" model-value = {member.id} />-->
-  </div>
-  <div>
-    받는 이
-    <el-input v-model="receiver" placeholder="받는 이"/>
-  </div>
-
   <div>
     <el-input v-model="title" placeholder="제목을 입력해주세요"/>
   </div>
@@ -59,7 +64,7 @@ const cancel = function (){
   </div>
 
   <div class="mt-2 d-flex justify-content-end">
-    <el-button type="primary" @click="write()">작성완료</el-button>
+    <el-button type="primary" @click="update()">수정완료</el-button>
     <el-button type="warning" @click="cancel()">취소</el-button>
   </div>
 

@@ -1,4 +1,4 @@
-<script setup lang="ts">
+<script setup lang="ts" >
 import {defineProps, onMounted, ref} from "vue";
 import axios from "axios";
 import router from "@/router";
@@ -12,16 +12,18 @@ const props = defineProps({
 
 //초기화방식개선필요
 const board = ref({});
+const like = ref(0)
+
+//코멘트관련
+const comments = ref([]);
 const content = ref("");
 const cPage = ref(1);
-const comments = ref([]);
 const children = ref(new Map());
 const childCount = ref(new Map());
-const like = ref(0)
 const commentCount = ref()
-const pageSize=5
+const pageSize = 5
 
-const reComments = ref(new Map<Number,Number>());
+const reComments = ref(new Map<Number, Number>());
 
 // api요청방식 개선필요
 onMounted(() => {
@@ -30,36 +32,39 @@ onMounted(() => {
     board.value = response.data;
   });
 
-  axios.get("/api/board/"+props.boardId+"/like")
-      .then((response)=>{
+  axios.get("/api/board/" + props.boardId + "/like")
+      .then((response) => {
         like.value = response.data.count
       })
   getCount()
   getComments()
 
 });
-function getChildCount(parentId: any){
-  axios.get("/api/board/"+props.boardId+"/comment/"+parentId+"/count")
-      .then((response)=>{
+
+function getChildCount(parentId: any) {
+  axios.get("/api/board/" + props.boardId + "/comment/" + parentId + "/count")
+      .then((response) => {
         console.log(response.data.count)
         childCount.value.set(parentId, response.data.count)
       })
 }
-function getCount(){
-  axios.get("/api/board/"+props.boardId+"/comment/count")
-      .then((response)=>{
+
+function getCount() {
+  axios.get("/api/board/" + props.boardId + "/comment/count")
+      .then((response) => {
         commentCount.value = response.data.count
       })
 }
-function clickLike(){
-  axios.post("/api/board/"+props.boardId+"/like")
-      .then((response)=>{
-        like.value= response.data.count
+
+function clickLike() {
+  axios.post("/api/board/" + props.boardId + "/like")
+      .then((response) => {
+        like.value = response.data.count
       })
 }
 
 const getComments = function () {
-  axios.get("/api/board/" + props.boardId + "/comments?size=5&page="+cPage.value)
+  axios.get("/api/board/" + props.boardId + "/comments?size=5&page=" + cPage.value)
       .then((response) => {
         console.log(cPage.value)
         comments.value = [];
@@ -72,11 +77,12 @@ const getComments = function () {
         console.log(error);
       });
 }
-function getChildren(parentId: any){
-  reComments.value.set(parentId,cPage)
-  axios.get("/api/comment/"+parentId+"/children?size=5&page="+reComments.value.get(parentId).value)
-      .then((response)=>{
-        children.value.set(parentId,[]);
+
+function getChildren(parentId: any) {
+  reComments.value.set(parentId, cPage)
+  axios.get("/api/comment/" + parentId + "/children?size=5&page=" + reComments.value.get(parentId).value)
+      .then((response) => {
+        children.value.set(parentId, []);
         response.data.forEach((r: any) => {
           children.value.get(parentId).push(r);
           getChildCount(parentId)
@@ -86,22 +92,34 @@ function getChildren(parentId: any){
         console.log(error);
       });
 }
-function doClick(parentId :any) {
+
+function doClick(parentId: any) {
   console.log(parentId)
   console.log(childCount.value.get(parentId))
-  if (reComments.value.has(parentId)){
+  if (reComments.value.has(parentId)) {
     console.log("닫기")
     let idx = reComments.value.delete(parentId)
-  } else{
+  } else {
     console.log("열기")
-    reComments.value.set(parentId,1)
+    reComments.value.set(parentId, 1)
     getChildren(parentId)
   }
   getChildCount(parentId)
 }
 
+const deleteBoard = function(){
+  axios.delete("/api/board/" + props.boardId)
+      .then(() => {
+        router.push({name: "board"})
+      })
+      .catch((error)=> {
+        alert("삭제 권한이 없습니다.")
 
-const write = function () {
+      })
+}
+
+
+const comment = function () {
 
   axios
       .post("/api/board/" + props.boardId + "/comment", {
@@ -115,7 +133,7 @@ const write = function () {
 
 };
 
-const writeChild = function (parentId: any) {
+const childComment = function (parentId: any) {
   axios
       .post("/api/board/" + props.boardId + "/comment", {
         content: content.value,
@@ -129,8 +147,14 @@ const writeChild = function (parentId: any) {
 
 };
 
-</script>
+const options = [
+  {
+    value: 'Option1',
+    label: 'Option1',
+  },
+]
 
+</script>
 
 
 <template>
@@ -154,37 +178,65 @@ const writeChild = function (parentId: any) {
       <el-badge :value=like class="item">
         <el-button @click="clickLike()">좋아요</el-button>
       </el-badge>
+      <div class="d-flex justify-content-end">
+        <el-button class="item justify-content-end" type="primary"
+                   @click="router.push({name: 'boardEdit', params: { boardId: board.id }})">수정하기
+        </el-button><!--TODO-->
+        <el-button class="item justify-content-end" type="warning"
+                   @click="deleteBoard()">삭제하기
+        </el-button><!--TODO-->
+      </div>
       <div class="col p-4 d-flex flex-column position-static border">
-        <strong class="d-inline-block mb-2 text-primary">댓글</strong><p>{{commentCount}}개</p>
+        <strong class="d-inline-block mb-2 text-primary">댓글</strong>
+        <p>{{ commentCount }}개</p>
         <div>
           <el-input v-model="content" placeholder="댓글을 입력해주세요"></el-input>
-          <el-button type="primary" @click="write()">작성</el-button>
+          <el-button type="primary" @click="comment()">작성</el-button>
         </div>
 
         <div>
           <ul v-for="comment in comments" :key="comment.id">
-            <div class="dropdown-toggle">
-              <div class="sub"><strong>{{ comment.writer }}</strong> {{ comment.createdAt }}</div>
+
+              <div class="sub">
+                <div class="dropdown-toggle">
+                  <el-dropdown trigger="click">
+                <span class="el-dropdown-link">
+                  <el-tag size="small"><strong>{{ comment.writer }}</strong></el-tag>
+                </span>
+                    <template #dropdown>
+                      <el-dropdown-menu>
+                        <el-dropdown-item class="clearfix">
+                          <router-link :to="{ name: 'messageWrite', params: {toLoginId: comment.writer}}">
+                            쪽지 보내기
+                          </router-link>
+                        </el-dropdown-item>
+                      </el-dropdown-menu>
+                    </template>
+                  </el-dropdown>
+                {{ comment.createdAt }}</div>
               <div><span>{{ comment.content }}</span></div>
-              <el-button  @click="doClick(comment.id)">답글 {{childCount.get(comment.id)}}</el-button>
-              <div v-if="reComments.has(comment.id)" class="border"><span>답글내역</span>
+              <el-button @click="doClick(comment.id)">답글 {{ childCount.get(comment.id) }}</el-button>
+              <div v-if="reComments.has(comment.id)" class="border">
                 <ul v-for="child in children.get(comment.id)" :key="child.id">
                   <div class="dropdown-toggle">
                     <div class="sub"><strong>{{ child.writer }}</strong> {{ child.createdAt }}</div>
-                    <div><span>{{child.content }}</span></div>
+                    <div><span>{{ child.content }}</span></div>
                   </div>
                 </ul>
                 <div>
                   <el-input v-model="content" placeholder="답글을 입력해주세요"></el-input>
-                  <el-button type="primary" @click="writeChild(comment.id)">작성</el-button>
+                  <el-button type="primary" @click="childComment(comment.id)">작성</el-button>
                 </div>
-                <el-pagination v-model:current-page="cPage" @click="getChildren(comment.id)" v-model:page-size="pageSize" layout="prev, pager, next" :total="childCount.get(comment.id)"/>
+                <el-pagination v-model:current-page="cPage" @click="getChildren(comment.id)"
+                               v-model:page-size="pageSize" layout="prev, pager, next"
+                               :total="childCount.get(comment.id)"/>
               </div>
             </div>
           </ul>
         </div>
 
-        <el-pagination v-model:current-page="cPage" @click="getComments()" v-model:page-size="pageSize" layout="prev, pager, next" :total="commentCount"/>
+        <el-pagination v-model:current-page="cPage" @click="getComments()" v-model:page-size="pageSize"
+                       layout="prev, pager, next" :total="commentCount"/>
       </div>
 
     </div>
@@ -210,7 +262,7 @@ const writeChild = function (parentId: any) {
 
 .sub {
   margin-top: 4px;
-  font-size: 0.78rem;
+  font-size: 1rem;
 
   .regDate {
     margin-left: 2px;

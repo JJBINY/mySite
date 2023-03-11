@@ -67,7 +67,7 @@ class BoardControllerTest {
         BoardCreate req = getTestBoardCreate();
         String json = objectMapper.writeValueAsString(req);
 
-        MockHttpSession session = getMockHttpSession();
+        MockHttpSession session = getMockHttpSession(getTestMember());
 
         //when
         mockMvc.perform(post("/board/write")
@@ -97,7 +97,7 @@ class BoardControllerTest {
                 .build();
         String json = objectMapper.writeValueAsString(req);
 
-        MockHttpSession session = getMockHttpSession();
+        MockHttpSession session = getMockHttpSession(getTestMember());
 
         // expected
         mockMvc.perform(post("/board/write")
@@ -118,7 +118,7 @@ class BoardControllerTest {
         BoardCreate req = getTestBoardCreate();
         String json = objectMapper.writeValueAsString(req);
 
-//        MockHttpSession session = getMockHttpSession();
+//        MockHttpSession session = getMockHttpSession(getTestMember());
 
         // expected
         mockMvc.perform(post("/board/write")
@@ -137,18 +137,13 @@ class BoardControllerTest {
     @DisplayName("게시글 조회 요청")
     void test2() throws Exception {
         //given
-        BoardCreate req = getTestBoardCreate();
-        String json = objectMapper.writeValueAsString(req);
-
-        Board save = boardRepository.save(Board.createBoard(req, getTestMember()));
+        Board save = boardRepository.save(Board.createBoard(getTestBoardCreate(), getTestMember()));
         MockHttpSession session = new MockHttpSession();
         session.setAttribute(SessionConst.LOGIN_MEMBER, save.getMember());
 
         // expected
         mockMvc.perform(get("/board/watch/"+save.getId())
-                        .contentType(MediaType.APPLICATION_JSON)
-//                        .session(session)
-                        .content(json))
+                        .contentType(MediaType.APPLICATION_JSON))
                 .andExpect(status().isOk())
                 .andExpect(jsonPath("$.title").value("제목"))
                 .andExpect(jsonPath("$.content").value("내용"))
@@ -171,7 +166,7 @@ class BoardControllerTest {
                 ).collect(Collectors.toList());
         boardRepository.saveAll(boardList);
 
-        MockHttpSession session = getMockHttpSession();
+        MockHttpSession session = getMockHttpSession(writer);
         // expected
         mockMvc.perform(get("/board/list")
                         .contentType(MediaType.APPLICATION_JSON)
@@ -198,7 +193,7 @@ class BoardControllerTest {
                 ).collect(Collectors.toList());
         boardRepository.saveAll(boardList);
 
-        MockHttpSession session = getMockHttpSession();
+        MockHttpSession session = getMockHttpSession(writer);
         // expected
         mockMvc.perform(get("/board/list?page=2&size=5")
                         .contentType(MediaType.APPLICATION_JSON)
@@ -234,7 +229,7 @@ class BoardControllerTest {
         boardRepository.saveAll(boardList);
         boardRepository.saveAll(boardList2);
 
-        MockHttpSession session = getMockHttpSession();
+        MockHttpSession session = getMockHttpSession(writer);
 
 
         // expected
@@ -251,7 +246,7 @@ class BoardControllerTest {
     @DisplayName("게시글 삭제 요청 - DB에서 값이 삭제된다")
     void test4() throws Exception {
         //given
-        MockHttpSession session = getMockHttpSession();
+        MockHttpSession session = getMockHttpSession(getTestMember());
         Member testMember= (Member)session.getAttribute(SessionConst.LOGIN_MEMBER);
 
         BoardCreate testBoardCreate = getTestBoardCreate();
@@ -272,7 +267,7 @@ class BoardControllerTest {
     @DisplayName("게시글 삭제 요청:실패 - 존재하지 않는 게시글")
     void test4_2() throws Exception {
         //given
-        MockHttpSession session = getMockHttpSession();
+        MockHttpSession session = getMockHttpSession(getTestMember());
 //        Member testMember= (Member)session.getAttribute(SessionConst.LOGIN_MEMBER);
 //
 //        BoardCreate testBoardCreate = getTestBoardCreate();
@@ -295,7 +290,7 @@ class BoardControllerTest {
     @DisplayName("게시글 삭제 요청:실패 - 인증되지 않은 요청")
     void test4_3() throws Exception {
         //given
-        MockHttpSession session = getMockHttpSession();
+        MockHttpSession session = getMockHttpSession(getTestMember());
         Member testMember= (Member)session.getAttribute(SessionConst.LOGIN_MEMBER);
 
         BoardCreate testBoardCreate = getTestBoardCreate();
@@ -319,7 +314,7 @@ class BoardControllerTest {
     @DisplayName("게시글 수정 요청 - DB에서 값이 수정된다")
     void test5() throws Exception {
         //given
-        MockHttpSession session = getMockHttpSession();
+        MockHttpSession session = getMockHttpSession(getTestMember());
         Member testMember= (Member)session.getAttribute(SessionConst.LOGIN_MEMBER);
 
         BoardCreate testBoardCreate = getTestBoardCreate();
@@ -350,7 +345,7 @@ class BoardControllerTest {
     @DisplayName("게시글 수정 요청:실패 - 수정시 제목은 필수")
     void test5_2() throws Exception {
         //given
-        MockHttpSession session = getMockHttpSession();
+        MockHttpSession session = getMockHttpSession(getTestMember());
         Member testMember= (Member)session.getAttribute(SessionConst.LOGIN_MEMBER);
 
         BoardCreate testBoardCreate = getTestBoardCreate();
@@ -380,7 +375,7 @@ class BoardControllerTest {
     @DisplayName("게시글 수정 요청:실패 - 존재하지 않는 게시글")
     void test5_3() throws Exception {
         //given
-        MockHttpSession session = getMockHttpSession();
+        MockHttpSession session = getMockHttpSession(getTestMember());
 //        Member testMember= (Member)session.getAttribute(SessionConst.LOGIN_MEMBER);
 //
 //        BoardCreate testBoardCreate = getTestBoardCreate();
@@ -410,7 +405,7 @@ class BoardControllerTest {
     @DisplayName("게시글 수정 요청:실패 - 인증되지 않은 요청")
     void test5_4() throws Exception {
         //given
-        MockHttpSession session = getMockHttpSession();
+        MockHttpSession session = getMockHttpSession(getTestMember());
         Member testMember= (Member)session.getAttribute(SessionConst.LOGIN_MEMBER);
 
         BoardCreate testBoardCreate = getTestBoardCreate();
@@ -442,7 +437,7 @@ class BoardControllerTest {
     void test6() throws Exception {
         //given
 
-        MockHttpSession session = getMockHttpSession();
+        MockHttpSession session = getMockHttpSession(getTestMember());
         Member member = (Member) session.getAttribute(SessionConst.LOGIN_MEMBER);
         Board board = getTestBoard(member);
 
@@ -468,7 +463,7 @@ class BoardControllerTest {
     void test6_2() throws Exception {
         //given
 
-        MockHttpSession session = getMockHttpSession();
+        MockHttpSession session = getMockHttpSession(getTestMember());
         Member member = (Member) session.getAttribute(SessionConst.LOGIN_MEMBER);
         Board board = getTestBoard(member);
 
@@ -491,7 +486,7 @@ class BoardControllerTest {
     void test6_3() throws Exception {
         //given
 
-        MockHttpSession session = getMockHttpSession();
+        MockHttpSession session = getMockHttpSession(getTestMember());
         Member member = (Member) session.getAttribute(SessionConst.LOGIN_MEMBER);
         Board board = getTestBoard(member);
 
@@ -515,7 +510,7 @@ class BoardControllerTest {
     @DisplayName("댓글 삭제 요청")
     void test7() throws Exception {
         //given
-        MockHttpSession session = getMockHttpSession();
+        MockHttpSession session = getMockHttpSession(getTestMember());
         Member member = (Member) session.getAttribute(SessionConst.LOGIN_MEMBER);
         Board board = getTestBoard(member);
 
@@ -536,7 +531,7 @@ class BoardControllerTest {
     @DisplayName("댓글 삭제 요청:실패 - 인증되지 않은 요청")
     void test7_2() throws Exception {
         //given
-        MockHttpSession session = getMockHttpSession();
+        MockHttpSession session = getMockHttpSession(getTestMember());
         Member member = (Member) session.getAttribute(SessionConst.LOGIN_MEMBER);
         Board board = getTestBoard(member);
 
@@ -555,7 +550,7 @@ class BoardControllerTest {
     @DisplayName("댓글 삭제 요청:실패 - 존재하지 않는 댓글")
     void test7_3() throws Exception {
         //given
-        MockHttpSession session = getMockHttpSession();
+        MockHttpSession session = getMockHttpSession(getTestMember());
         Member member = (Member) session.getAttribute(SessionConst.LOGIN_MEMBER);
         Board board = getTestBoard(member);
 
@@ -574,7 +569,7 @@ class BoardControllerTest {
     @DisplayName("댓글 리스트 조회 요청")
     void test8() throws Exception {
         //given
-        MockHttpSession session = getMockHttpSession();
+        MockHttpSession session = getMockHttpSession(getTestMember());
         Member member = (Member) session.getAttribute(SessionConst.LOGIN_MEMBER);
         Board board = getTestBoard(member);
 
@@ -596,7 +591,7 @@ class BoardControllerTest {
     @DisplayName("댓글 리스트 조회 요청 - size&page 파라미터를 넘기지 않으면 디폴트 값이 할당된다")
     void test8_2() throws Exception {
         //given
-        MockHttpSession session = getMockHttpSession();
+        MockHttpSession session = getMockHttpSession(getTestMember());
         Member member = (Member) session.getAttribute(SessionConst.LOGIN_MEMBER);
         Board board = getTestBoard(member);
 
@@ -615,7 +610,7 @@ class BoardControllerTest {
     @DisplayName("자식 댓글 리스트 조회 요청")
     void test9() throws Exception {
         //given
-        MockHttpSession session = getMockHttpSession();
+        MockHttpSession session = getMockHttpSession(getTestMember());
         Member member = (Member) session.getAttribute(SessionConst.LOGIN_MEMBER);
         Board board = getTestBoard(member);
 
@@ -650,7 +645,7 @@ class BoardControllerTest {
     @DisplayName("게시글 좋아요 요청 - db에 좋아요 정보가 저장된다.")
     void test10() throws Exception {
         //given
-        MockHttpSession session = getMockHttpSession();
+        MockHttpSession session = getMockHttpSession(getTestMember());
         Member member = (Member) session.getAttribute(SessionConst.LOGIN_MEMBER);
         Board board = getTestBoard(member);
 
@@ -666,7 +661,7 @@ class BoardControllerTest {
     @DisplayName("게시글 좋아요 요청 - 이미 좋아요한 경우 좋아요가 취소된다.")
     void test10_2() throws Exception {
         //given
-        MockHttpSession session = getMockHttpSession();
+        MockHttpSession session = getMockHttpSession(getTestMember());
         Member member = (Member) session.getAttribute(SessionConst.LOGIN_MEMBER);
         Board board = getTestBoard(member);
 
@@ -690,7 +685,7 @@ class BoardControllerTest {
     @DisplayName("게시글 좋아요 요청:실패 - 인증되지 않은 요청")
     void test10_3() throws Exception {
         //given
-        MockHttpSession session = getMockHttpSession();
+        MockHttpSession session = getMockHttpSession(getTestMember());
         Member member = (Member) session.getAttribute(SessionConst.LOGIN_MEMBER);
         Board board = getTestBoard(member);
 
@@ -723,9 +718,8 @@ class BoardControllerTest {
 
 
 
-    private MockHttpSession getMockHttpSession() {
+    private MockHttpSession getMockHttpSession(Member member) {
 
-        Member member = getTestMember();
         MockHttpSession session = new MockHttpSession();
         session.setAttribute(SessionConst.LOGIN_MEMBER, member);
         return session;

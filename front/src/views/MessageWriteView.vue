@@ -1,14 +1,21 @@
 <script setup lang="ts">
-import {ref} from "vue";
+import {ref, defineProps} from "vue";
 import axios from "axios";
 import router from "@/router";
 
+const props = defineProps({
+  toLoginId: {
+    type: [Number, String],
+    require: true,
+  },
+});
 
+const sender = ref("")
+const to = ref("")
 const title = ref("")
 const content = ref("")
 let member = ref({})
 
-//TODO 세션 유효성 프론트에서 확인하는 방법 찾아서 개선하기
 axios.get("/api/member")
     .then((response) =>{
       console.log("세션조회")
@@ -22,27 +29,32 @@ const write = function () {
   // console.log(title,content)
   // alert("저장완료")
   axios
-      .post("/api/board/write", {
-        title: title.value,
+      .post("/api/message/create", {
+        toLoginId: props.toLoginId,
         content: content.value,
       })
       .then(() => {
-        router.replace({name: "board"})
+        router.replace({name: "home"})
       });
+
 };
 
 const cancel = function (){
-  router.replace({name: "board"})
+  router.replace({name: "home"})
 }
 
 </script>
 
 <template>
+<!--  //TODO 뷰 구조 변경 필요-->
+
   <div>
-    <el-input v-model="title" placeholder="제목을 입력해주세요"/>
+    받는 이
+    <el-input v-model="props.toLoginId" />
   </div>
 
   <div class="mt-2">
+    내용
     <el-input v-model="content" type="textarea" rows="15"/>
   </div>
 

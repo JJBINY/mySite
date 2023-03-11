@@ -27,8 +27,6 @@ public class CommentService {
 
     private final CommentRepository commentRepository;
 
-
-
     @Transactional
     public Comment comment(Comment comment) {
         Comment save = commentRepository.save(comment);

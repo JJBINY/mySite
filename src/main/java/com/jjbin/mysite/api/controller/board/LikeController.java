@@ -26,6 +26,7 @@ public class LikeController {
         return Map.of("count", count);
     }
 
+    //TODO 그냥 보드 불러올때 like갯수 같이 불러오는게 낫지 않을까?
     @GetMapping("/board/{boardId}/like")
     public Map<String,Long> getLikeBoard(@PathVariable Long boardId) {
 
