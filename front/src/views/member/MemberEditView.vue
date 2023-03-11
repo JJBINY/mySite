@@ -35,19 +35,16 @@ const logout = function () {
   <el-card class="box-card">
     <template #header>
       <div class="card-header">
-        <span>회원정보</span>
+        <span>회원정보 수정</span>
       </div>
     </template>
-<!--    <div v-for="o in 4" :key="o" class="text item">{{ 'List item ' + o }}</div>-->
-    <div class="text item">이름 : {{member.name}}</div>
-    <div class="text item">아이디 : {{member.loginId}}</div>
-    <div class="text item">주소 : {{member.address}}</div>
-  </el-card>
-  <div class="mt-2 d-flex justify-content-end">
+    회원정보 수정 추후 구현예정
 
-    <el-button type="primary" @click="">회원정보 수정</el-button><!--TODO-->
-    <el-button type="warning" @click="logout()">로그아웃</el-button>
+  <div class="mt-2 d-flex justify-content-end">
+    <el-button type="primary" @click="">수정완료</el-button><!--TODO-->
+    <el-button type="warning" @click="router.push({name:'loginHome'})">취소</el-button>
   </div>
+  </el-card>
 
 </template>
 

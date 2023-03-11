@@ -14,18 +14,18 @@ public class BoardResponse {
     private String title;
     private String content;
 
-
+    private int likes;
     private LocalDateTime createdAt;
     private LocalDateTime lastModifiedAt;
 
     public BoardResponse(Board board) {
         this.id = board.getId();
-        this.writer = board.getMember().getName();
+        this.writer = board.getMember().getLoginId();
         this.title = board.getTitle();
         this.content = board.getContent();
         this.createdAt = board.getCreatedAt();
         this.lastModifiedAt = board.getLastModifiedAt();
-
+        this.likes = board.getLikes().size();
     }
 
 }

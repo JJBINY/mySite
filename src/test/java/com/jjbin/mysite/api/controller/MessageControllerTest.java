@@ -20,6 +20,7 @@ import org.springframework.mock.web.MockHttpSession;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.request.MockMvcRequestBuilders;
 
+import javax.persistence.EntityManager;
 import java.util.List;
 import java.util.stream.Collectors;
 import java.util.stream.IntStream;
@@ -51,14 +52,16 @@ class MessageControllerTest {
     void beforeEach(){
         messageRepository.deleteAll();
         memberRepository.deleteAll();
-        to = Member.builder().loginId("수신자아이디")
+        memberRepository.save(Member.builder().loginId("수신자아이디")
                 .name("수신자")
-                .build();
-
-        from = Member.builder().loginId("송신자아이디")
+                .build()
+        );
+        memberRepository.save(Member.builder().loginId("송신자아이디")
                 .name("송신자")
-                .build();
-
+                .build()
+        );
+        to = memberRepository.findByLoginId("수신자아이디").get();
+        from = memberRepository.findByLoginId("송신자아이디").get();
     }
 
     @Test
@@ -81,9 +84,10 @@ class MessageControllerTest {
                 .andDo(print());
 
         // then
-        Message message = messageRepository.findAll().get(0);
-        assertThat(message.getTo()).isEqualTo(to);
-        assertThat(message.getFrom()).isEqualTo(from);
+        Long id = messageRepository.findAll().get(0).getId();
+        Message message = messageRepository.findOne(id).get();
+        assertThat(message.getTo().getId()).isEqualTo(to.getId());
+        assertThat(message.getFrom().getId()).isEqualTo(from.getId());
         assertThat(message.getContent()).isEqualTo("내용");
     }
 
@@ -147,8 +151,9 @@ class MessageControllerTest {
                         .session(session)
                         .content(json))
                 .andExpect(status().isBadRequest())
-                .andExpect(jsonPath("$.code").value("401"))
-                .andExpect(jsonPath("$.message").value("전송할 대상을 입력해주세요."))
+                .andExpect(jsonPath("$.code").value("400"))
+                .andExpect(jsonPath("$.message").value("잘못된 요청입니다."))
+                .andExpect(jsonPath("$.validation.toLoginId").value("전송할 대상을 입력해주세요."))
                 .andDo(print());
     }
 
@@ -169,8 +174,9 @@ class MessageControllerTest {
                         .session(session)
                         .content(json))
                 .andExpect(status().isBadRequest())
-                .andExpect(jsonPath("$.code").value("401"))
-                .andExpect(jsonPath("$.message").value("내용을 입력해주세요."))
+                .andExpect(jsonPath("$.code").value("400"))
+                .andExpect(jsonPath("$.message").value("잘못된 요청입니다."))
+                .andExpect(jsonPath("$.validation.content").value("내용을 입력해주세요."))
                 .andDo(print());
     }
 
@@ -178,7 +184,7 @@ class MessageControllerTest {
     @DisplayName("메세지 조회 요청")
     void test2() throws Exception {
         //given
-        Message save = messageRepository.save(Message.createMessage(from, to, ""));
+        Message save = messageRepository.save(Message.createMessage(from, to, "내용"));
         MockHttpSession session = new MockHttpSession();
         session.setAttribute(SessionConst.LOGIN_MEMBER, save.getFrom());
 

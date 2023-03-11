@@ -20,7 +20,7 @@ public class CommentResponse {
     @Builder
     public CommentResponse(Comment comment) {
         this.id = comment.getId();
-        this.writer = comment.getMember().getName();
+        this.writer = comment.getMember().getLoginId();
         this.content = comment.getContent();
         this.createdAt = comment.getCreatedAt();
 

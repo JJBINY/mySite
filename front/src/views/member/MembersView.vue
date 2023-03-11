@@ -12,6 +12,8 @@ axios.get("/api/members").then((response) => {
   response.data.forEach((r: any) => {
     members.value.push(r);
   })
+}).catch((c) => {
+  router.push("login")
 });
 
 
@@ -27,15 +29,15 @@ axios.get("/api/members").then((response) => {
         </router-link>
       </div>
       <div class="title">
-          {{ member.phone }}
+        {{ member.phone }}
       </div>
       <div class="title">
         {{ member.address }}
       </div>
 
-<!--      <div class="sub d-flex">-->
-<!--        <div class="regDate">2023-01-20{{member.date}}</div>-->
-<!--      </div>-->
+      <!--      <div class="sub d-flex">-->
+      <!--        <div class="regDate">2023-01-20{{member.date}}</div>-->
+      <!--      </div>-->
 
     </li>
   </ul>
@@ -56,7 +58,7 @@ ul {
         text-decoration: none;
       }
 
-      :hover{
+      :hover {
         text-decoration: underline;
       }
     }
@@ -71,11 +73,11 @@ ul {
       margin-bottom: 0;
     }
 
-    .sub{
+    .sub {
       margin-top: 4px;
       font-size: 0.78rem;
 
-      .regDate{
+      .regDate {
         margin-left: 2px;
         color: #6b6b6b;
       }

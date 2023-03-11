@@ -68,7 +68,6 @@ public class MemberService {
             throw new ObjectNotFound("아이디 또는 비밀번호가 잘못되었습니다.");
         }
         return member;
-
     }
 
     public Member findOne(Long id){

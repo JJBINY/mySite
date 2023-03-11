@@ -1,10 +1,7 @@
 package com.jjbin.mysite.api.domain;
 
 import com.jjbin.mysite.api.request.create.MemberCreate;
-import lombok.AccessLevel;
-import lombok.Builder;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
+import lombok.*;
 
 import javax.persistence.*;
 import java.time.LocalDateTime;
@@ -20,6 +17,7 @@ public class Member {
     @Column(name = "member_id")
     private Long id;
 
+    @Column(unique = true)
     private String loginId;     //로그인 ID
     private String password;    //로그인 비밀번호
     private String name;        //사용자 이름

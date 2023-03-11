@@ -59,12 +59,12 @@ class MessageServiceTest {
 
         //when
         Long messageId = messageService.Write(messageCreate, from);
-        Message message = messageRepository.findById(messageId).orElse(null);
+        Message message = messageRepository.findOne(messageId).orElse(null);
         //then
         assertThat(messageRepository.count()).isEqualTo(1L);
         assertThat(message.getContent()).isEqualTo("내용");
-        assertThat(message.getTo()).isEqualTo(to);
-        assertThat(message.getFrom()).isEqualTo(from);
+        assertThat(message.getTo().getId()).isEqualTo(to.getId());
+        assertThat(message.getFrom().getId()).isEqualTo(from.getId());
 
     }
 
@@ -99,8 +99,8 @@ class MessageServiceTest {
         //then
         assertThat(findOne.getId()).isEqualTo(messageId);
         assertThat(findOne.getContent()).isEqualTo("내용");
-        assertThat(findOne.getFrom()).isEqualTo(from);
-        assertThat(findOne.getTo()).isEqualTo(to);
+        assertThat(findOne.getTo().getId()).isEqualTo(to.getId());
+        assertThat(findOne.getFrom().getId()).isEqualTo(from.getId());
     }
 
     @Test
@@ -142,8 +142,8 @@ class MessageServiceTest {
         //then
         assertThat(fromList.size()).isEqualTo(5);
         for (int i = 0; i < 5; i++) {
-            assertThat(fromList.get(i).getContent()).isEqualTo("내용"+i);
-            assertThat(fromList.get(i).getFrom().getName()).isEqualTo("송신아이디");
+            assertThat(fromList.get(i).getContent()).isEqualTo("내용"+(4-i));
+            assertThat(fromList.get(i).getFrom().getName()).isEqualTo("보내는이");
         }
     }
 
@@ -165,13 +165,13 @@ class MessageServiceTest {
         }
 
         // when
-        List<Message> toList = messageService.findToList(new SearchOption(), from.getId());
+        List<Message> toList = messageService.findToList(new SearchOption(), to.getId());
 
         //then
         assertThat(toList.size()).isEqualTo(5);
         for (int i = 0; i < 5; i++) {
-            assertThat(toList.get(i).getContent()).isEqualTo("내용"+i);
-            assertThat(toList.get(i).getTo().getName()).isEqualTo("수신아이디");
+            assertThat(toList.get(i).getContent()).isEqualTo("내용"+(4-i));
+            assertThat(toList.get(i).getTo().getName()).isEqualTo("받는이");
         }
     }
 }

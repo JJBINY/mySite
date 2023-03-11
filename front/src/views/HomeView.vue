@@ -15,50 +15,11 @@ axios.get("/api/")
     });
 
 
-const login = function () {
-  // console.log(title,content)
-  // alert("저장완료")
-  axios
-      .post("/api/login", {
-        loginId: form.loginId,
-        password: form.password,
-      })
-      .then((response) => {
-        // console.log(response.status);
-        console.log("postok")
-
-        //TODO 로그인 성공 or 실패 분기별 로직작성
-        router.replace({name: "loginHome"});
-      })
-      .catch((error)=> {
-        console.log(error)
-        alert(error.response.data.message)
-      })
-  ;
-
-};
-
-
-const form = reactive({
-  loginId: '',
-  password: '',
-})
-
 </script>
 
 <template>
   <h2>홈화면입니다.</h2>
-  <el-form :inline="true" :model="form" class="demo-form-inline">
-    <el-form-item label="아이디">
-      <el-input v-model="form.loginId" placeholder="아이디" />
-    </el-form-item>
-    <el-form-item label="비밀번호">
-      <el-input v-model="form.password" placeholder="비밀번호" />
-    </el-form-item>
-    <el-form-item>
-      <el-button type="primary" @click="login()">로그인</el-button>
-    </el-form-item>
-    </el-form>
+
 
 
 </template>

@@ -70,7 +70,7 @@ class BoardDocTest {
         BoardCreate req = getTestBoardCreate();
         String json = objectMapper.writeValueAsString(req);
 
-        MockHttpSession session = getMockHttpSession();
+        MockHttpSession session = getMockHttpSession(getTestMember());
 
         // expected
         mockMvc.perform(RestDocumentationRequestBuilders.post("/board/write")
@@ -97,7 +97,7 @@ class BoardDocTest {
                 .build();
         String json = objectMapper.writeValueAsString(req);
 
-        MockHttpSession session = getMockHttpSession();
+        MockHttpSession session = getMockHttpSession(getTestMember());
         // expected
         mockMvc.perform(RestDocumentationRequestBuilders.post("/board/write")
                         .contentType(MediaType.APPLICATION_JSON)
@@ -144,6 +144,7 @@ class BoardDocTest {
                                 fieldWithPath("writer").description("작성자"),
                                 fieldWithPath("title").description("글 제목"),
                                 fieldWithPath("content").description("글 내용"),
+                                fieldWithPath("likes").description("좋아요 갯수"),
                                 fieldWithPath("createdAt").description("최초 작성일"),
                                 fieldWithPath("lastModifiedAt").description("마지막 수정일")
                         )
@@ -165,7 +166,7 @@ class BoardDocTest {
                 ).collect(Collectors.toList());
         boardRepository.saveAll(boardList);
 
-        MockHttpSession session = getMockHttpSession();
+        MockHttpSession session = getMockHttpSession(writer);
         // expected
         mockMvc.perform(get("/board/list?size=10&page=1&keyword=제목")
                         .contentType(MediaType.APPLICATION_JSON)
@@ -189,6 +190,7 @@ class BoardDocTest {
                                 fieldWithPath("[].writer").description("작성자"),
                                 fieldWithPath("[].title").description("글 제목"),
                                 fieldWithPath("[].content").description("글 내용"),
+                                fieldWithPath("[].likes").description("좋아요 갯수"),
                                 fieldWithPath("[].createdAt").description("최초 작성일"),
                                 fieldWithPath("[].lastModifiedAt").description("마지막 수정일")
                         )
@@ -201,7 +203,7 @@ class BoardDocTest {
     void test4() throws Exception {
         //given
 
-        MockHttpSession session = getMockHttpSession();
+        MockHttpSession session = getMockHttpSession(getTestMember());
         Member testMember = (Member) session.getAttribute(SessionConst.LOGIN_MEMBER);
 
         BoardCreate testBoardCreate = getTestBoardCreate();
@@ -227,7 +229,7 @@ class BoardDocTest {
     @DisplayName("게시글 삭제 요청:실패 - 존재하지 않는 게시글")
     void test4_2() throws Exception {
         //given
-        MockHttpSession session = getMockHttpSession();
+        MockHttpSession session = getMockHttpSession(getTestMember());
 
         //expected
         mockMvc.perform(delete("/board/{boardId}", 100)
@@ -252,7 +254,7 @@ class BoardDocTest {
     @DisplayName("게시글 수정 요청")
     void test5() throws Exception {
         //given
-        MockHttpSession session = getMockHttpSession();
+        MockHttpSession session = getMockHttpSession(getTestMember());
         Member testMember= (Member)session.getAttribute(SessionConst.LOGIN_MEMBER);
 
         BoardCreate testBoardCreate = getTestBoardCreate();
@@ -293,7 +295,7 @@ class BoardDocTest {
     @DisplayName("게시글 수정 요청:실패 - 존재하지 않는 게시글")
     void test5_2() throws Exception {
         //given
-        MockHttpSession session = getMockHttpSession();
+        MockHttpSession session = getMockHttpSession(getTestMember());
 
         BoardEdit edit = BoardEdit.builder()
                 .title("수정제목")
@@ -328,9 +330,8 @@ class BoardDocTest {
 
 
 
-    private MockHttpSession getMockHttpSession() {
+    private MockHttpSession getMockHttpSession(Member member) {
 
-        Member member = getTestMember();
         MockHttpSession session = new MockHttpSession();
         session.setAttribute(SessionConst.LOGIN_MEMBER, member);
         return session;

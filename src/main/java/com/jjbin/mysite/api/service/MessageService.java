@@ -33,7 +33,7 @@ public class MessageService {
     }
 
     public Message findOne(Long id) {
-        return messageRepository.findById(id)
+        return messageRepository.findOne(id)
                 .orElseThrow(ObjectNotFound::new);
     }
 
