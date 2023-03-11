@@ -1,9 +1,10 @@
 # mySite
 
-
-![1](https://user-images.githubusercontent.com/97151887/224470355-4fd1ef01-259d-4b8c-9e9b-aa09c5fb81b9.png)
-![2](https://user-images.githubusercontent.com/97151887/224470359-91f2729d-0029-41dd-b7a9-997ebd89eb00.png)
-![3](https://user-images.githubusercontent.com/97151887/224470361-f476150e-0d02-417a-8247-0a71e6a4ca5e.png)
-![4](https://user-images.githubusercontent.com/97151887/224470362-6af04bab-3223-49b1-a08b-eeddc82bb0ee.png)
-![5](https://user-images.githubusercontent.com/97151887/224470363-a0c77804-b2fc-4f2a-99a7-1671773a1dad.png)
-![6](https://user-images.githubusercontent.com/97151887/224470365-5b733faa-0600-440e-af41-4ccd88c053e3.png)
+게시판 
+<img src="https://user-images.githubusercontent.com/97151887/224470447-83364b70-16ac-4c0e-bc08-4af1f3059017.png)" width="200" height="400"/>
+![1](https://user-images.githubusercontent.com/97151887/224470447-83364b70-16ac-4c0e-bc08-4af1f3059017.png)
+![2](https://user-images.githubusercontent.com/97151887/224470448-7b508389-baaf-458b-90b6-5f482f4f58f6.png)
+![3](https://user-images.githubusercontent.com/97151887/224470449-1310dae2-c24a-49fa-b98b-9a5f41fb3453.png)
+![4](https://user-images.githubusercontent.com/97151887/224470450-f20796aa-0d64-4fdb-874d-f73c7857bbb4.png)
+![5](https://user-images.githubusercontent.com/97151887/224470452-47e07c82-5528-4ec9-9869-29f0e3704eef.png)
+![6](https://user-images.githubusercontent.com/97151887/224470454-3398242e-11fb-4992-bc82-d834e09a36ae.png)
