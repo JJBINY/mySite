@@ -14,3 +14,6 @@
 
 ## 게시글 수정 및 삭제
 ![ezgif com-crop (3)](https://user-images.githubusercontent.com/97151887/224472188-d1d2debf-9f8d-4695-af7b-d73aa4d8b830.gif)
+
+## ERD
+![Untitled](https://s3-us-west-2.amazonaws.com/secure.notion-static.com/23de28f9-ba7e-4990-a42f-07629359b5c1/Untitled.png)
